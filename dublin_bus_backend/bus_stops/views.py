@@ -7,39 +7,31 @@ from .models import BusStops
 from .serializers import *
 
 
-@api_view(['GET', 'POST'])
+@api_view(['GET'])
 def bus_stops_list(request):
+    #Will be fed by request later on
+    route = 14
     if request.method == 'GET':
-        data = BusStops.objects.all()
-
+        data = BusStops.objects.all().filter(route=route)
         serializer = BusStopsSerializer(data, context={'request': request}, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-        return Response(serializer.data)
-
-    elif request.method == 'POST':
-        serializer = BusStopsSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(status=status.HTTP_201_CREATED)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-#Below will be delete later on.
-@api_view(['PUT', 'DELETE'])
-def bus_stops_detail(request, pk):
+@api_view(['POST'])
+def journey_time(request):
+    """Main function for our web app. Takes in the user information from the frontend.
+    Passes this information into our model to generate an estimation for the journey time."""
+    data = request.data
     try:
-        student = BusStops.objects.get(pk=pk)
-    except BusStops.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        #Will set up data processing module and model
+        predictions = {
+            'error': '0',
+            'message': 'Successful',
+            'prediction': 0
+        }
+    except Exception as e:
+        predictions = {
+            'error': '2',
+            "message": str(e)
+        }
 
-    if request.method == 'PUT':
-        serializer = BusStopsSerializer(student, data=request.data, context={'request': request})
-        if serializer.is_valid():
-            serializer.save()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    elif request.method == 'DELETE':
-        student.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-# Create your views here.
+    return Response(predictions, status=status.HTTP_201_CREATED)
