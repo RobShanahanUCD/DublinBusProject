@@ -81,12 +81,15 @@ WSGI_APPLICATION = 'dublin_bus_backend.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+'default': {
+    'ENGINE': 'django.db.backends.mysql',
+    'NAME': 'dublin_bus_static',
+    'USER': 'admin',
+    'PASSWORD': 'robpaijohn',
+    'HOST': 'dublinbus.cegwluuehipg.eu-west-1.rds.amazonaws.com',
+    'PORT': '3306',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators

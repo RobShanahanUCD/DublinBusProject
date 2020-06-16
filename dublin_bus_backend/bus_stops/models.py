@@ -21,7 +21,7 @@ class BusStops(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'api'
+        db_table = 'bus_stops'
         unique_together = (('stopid', 'route'),)
 
 

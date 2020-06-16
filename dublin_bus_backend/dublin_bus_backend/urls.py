@@ -21,7 +21,7 @@ from django.conf.urls import url, include
 
 urlpatterns = [
     # url(r'^$', home),
-    url('admin/', admin.site.urls),
-    url(r'^api/bus_stops/$', views.bus_stops_list),
-    url(r'^api/bus_stops/(?P<stopID>\d+)', views.bus_stops_detail),
+    url(r'^admin/', admin.site.urls),
+    url(r'^bus_stops/bus_stops_list/(?P<route>.+)/$', views.BusStopsList.as_view()),
+    url(r'^bus_stops/journey_time/$', views.Journey.as_view()),
 ]
