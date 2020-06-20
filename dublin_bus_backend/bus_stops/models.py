@@ -8,16 +8,23 @@
 from django.db import models
 
 
+class Journey(models.Model):
+
+    route = models.CharField(max_length=12)
+    datetime = models.CharField(max_length=20)
+
+    def __str__(self):
+        return '{}, {}'.format(self.route, self.datetime)
+
+
 class BusStops(models.Model):
+
     stopid = models.IntegerField(primary_key=True)
-    displaystopid = models.IntegerField(blank=True, null=True)
-    shortname = models.CharField(max_length=45, blank=True, null=True)
-    fullname = models.CharField(max_length=45, blank=True, null=True)
-    latitude = models.FloatField(blank=True, null=True)
-    longitude = models.FloatField(blank=True, null=True)
-    name = models.CharField(max_length=45, blank=True, null=True)
-    operatortype = models.IntegerField(blank=True, null=True)
-    route = models.CharField(max_length=45)
+    stopname = models.CharField(max_length=60, blank=True, null=True)
+    route = models.CharField(max_length=12)
+    lon = models.FloatField(blank=True, null=True)
+    lat = models.FloatField(blank=True, null=True)
+    direction = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False

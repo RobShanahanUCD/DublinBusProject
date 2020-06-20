@@ -15,13 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from bus_stops import views
-from django.conf.urls import url, include
+from django.conf.urls import include
 
 
 urlpatterns = [
-    # url(r'^$', home),
-    url(r'^admin/', admin.site.urls),
-    url(r'^bus_stops/bus_stops_list/(?P<route>.+)/$', views.BusStopsList.as_view()),
-    url(r'^bus_stops/journey_time/$', views.Journey.as_view()),
+    path('admin/', admin.site.urls),
+    path('', include('bus_stops.urls')),
 ]
