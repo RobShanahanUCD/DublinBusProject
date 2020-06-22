@@ -1,4 +1,4 @@
-"""dublin_bus_backend URL Configuration
+"""dublin_bus_time URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.0/topics/http/urls/
@@ -20,6 +20,6 @@ from django.conf.urls import include
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
-    path('', include('frontend.urls')),
+    # path('', include('frontend.urls')),
     path('', include('bus_stops.urls')),
 ]
