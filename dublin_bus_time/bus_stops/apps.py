@@ -13,4 +13,4 @@ class PredictionConfig(AppConfig):
     # #CLASSIFIER_FILE = CLASSIFIER_FOLDER / "IRISRandomForestClassifier.joblib"
     # CLASSIFIER_FILE = os.path.join(CLASSIFIER_FOLDER, "IRISRandomForestClassifier.joblib")
     # classifier = load(CLASSIFIER_FILE)
-    pass
+

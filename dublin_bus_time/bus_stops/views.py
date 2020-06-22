@@ -43,7 +43,7 @@ class UserForm(APIView):
             if form.is_valid():
                 route = form.cleaned_data['route']
                 time = form.cleaned_data['time']
-                data = (request.POST).dict()
+                data = request.POST.dict( )
                 answer = journey_predict(data)
                 messages.success(request, 'Time: {}'.format(answer))
         form = JourneyForm()
