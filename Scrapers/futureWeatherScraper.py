@@ -1,4 +1,4 @@
-import requests,json,datetime,time
+import requests, json, datetime, time
 from datetime import datetime
 import pymysql
 import os
