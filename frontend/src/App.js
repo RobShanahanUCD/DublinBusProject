@@ -1,7 +1,11 @@
-import React, { Component, useState, useEffect, useRef } from 'react';
+import React, { Component, useState, useEffect, useRef} from 'react';
+import { Button, ButtonGroup } from "reactstrap";
 import { debounce } from 'lodash' //Autocomplete time delay setting
 import { Key } from './key' // API key
+import {API_URL_PREDICT} from './Api' //backend URL
 import GoogleMapReact from 'google-map-react';
+import axios from "axios";
+import DatePicker from "react-datepicker";
 
 // Default Dublin center
 let cityCenter = {
@@ -29,6 +33,9 @@ const SimpleMap = (props) => {
 
   // Default state
   let inputRef = useRef(null);
+  let inputRefTo = useRef(null);
+
+  const [startDate, setStartDate] = useState(new Date());
   
   const [mapApiLoaded, setMapApiLoaded] = useState(false)
   const [mapInstance, setMapInstance] = useState(null)
@@ -40,7 +47,7 @@ const SimpleMap = (props) => {
     setMapApiLoaded(true)
   };
 
-  const [searchType, setSearchType] = useState(['bus_station'])
+  const [searchType, setSearchType] = useState(['transit_station'])
 
   const SearchType = ({ text, type }) => {
     return <input type="button" value={text} name={type} />
@@ -85,6 +92,10 @@ const SimpleMap = (props) => {
 
   const handleInput = () =>{
     setInputText(inputRef.current.value)
+  }
+
+  const handleInputTo = () =>{
+    setInputText(inputRefTo.current.value)
   }
 
   const handleSearchType = e => {
@@ -154,12 +165,55 @@ const SimpleMap = (props) => {
     })
   }
 
+  const handleSubmit = e => {
+    e.preventDefault();
+    axios({
+      method: 'post',
+      url: API_URL_PREDICT, 
+      data: {
+      "route": 1,
+      "time" : 2
+      }
+    })
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
+
+
   return (
       <div style={{ height: '100vh', width: '100%' }}>
+      
       <div>
-        <div >
-        From: <input ref={inputRef} type="text" onChange={ debounce(handleInput, 500) } />
-        {/* To: <input ref={inputRef} type="text" onChange={ debounce(handleInput, 500) } /> */}
+        <div class="form">
+        <Button onClick={handleSubmit}>Test</Button> 
+        From: <input ref={inputRef} type="text" onChange={ debounce(handleInput, 500) } /><br/>
+        To: <input ref={inputRefTo} type="text" onChange={ debounce(handleInputTo, 500) } /><br/> 
+        Departure Date<DatePicker
+          selected={startDate}
+          onChange={date => setStartDate(date)}
+          timeFormat="HH:mm"
+          timeIntervals={15}
+          timeCaption="time"
+          dateFormat="MMMM d, yyyy h:mm aa"
+          showTimeSelect
+          popperPlacement="bottom-start"
+          class="react-date-picker"
+          popperModifiers={{
+            flip: {
+              enabled: false
+            },
+            preventOverflow: {
+              enabled: true,
+              escapeWithReference: false
+            }
+          }}
+
+        />
+        
         </div>
         <div onClick={handleClickToChangeMyPosition} class="search"> 
           {(autocompleteResults && inputText) &&
@@ -172,7 +226,7 @@ const SimpleMap = (props) => {
       </div>
       
       <div onClick={handleSearchType} class="search-place">
-        <SearchType text="Bus Stop" type="bus_station" />
+        <SearchType text="Bus Stop" type="transit_station" />
         <SearchType text="Tourist Spot" type="tourist_attraction" />
       </div>
       <div class="map-type">

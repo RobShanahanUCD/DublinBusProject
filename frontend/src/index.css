@@ -38,3 +38,14 @@ code {
   z-index: 1000;
   background-color: cyan;
 }
+
+.form {
+  /* display: flex; */
+  /* lex-wrap: wrap; */
+  z-index: 2000;
+
+}
+
+.react-date-picker {
+  z-index: 20000000;
+}
