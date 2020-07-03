@@ -25,7 +25,7 @@ SECRET_KEY = '!c!aw$e0b+#tbq#mid%!77qqrl1797y6ci_+t(%r@*@lskn(hg'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -131,4 +131,4 @@ STATIC_URL = '/static/'
 
 #Addition Settings
 
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_ALLOW_ALL = True #or frontend cannot connect

@@ -21,3 +21,13 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Other
+.idea/
+#API key
+key.js
+
+#others
+pickle_builder.py
+.vscode
+*__.pkl

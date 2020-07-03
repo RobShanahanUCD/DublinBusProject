@@ -11,3 +11,41 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+#search-list:hover {
+  color:red;
+
+}
+
+.search-place {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
+  display:block;
+}
+
+.map-type {
+  position: fixed;
+  bottom: 30px;
+  left: 0;
+  z-index: 10;
+  display:block;
+}
+
+.search {
+  position: absolute;
+  z-index: 1000;
+  background-color: cyan;
+}
+
+.form {
+  /* display: flex; */
+  /* lex-wrap: wrap; */
+  z-index: 2000;
+
+}
+
+.react-date-picker {
+  z-index: 20000000;
+}

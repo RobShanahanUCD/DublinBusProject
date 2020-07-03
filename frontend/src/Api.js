@@ -1,0 +1,1 @@
+export const API_URL_PREDICT = "http://localhost:8000/predict/";
