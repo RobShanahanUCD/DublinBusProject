@@ -1,18 +1,39 @@
-from django.shortcuts import render
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from rest_framework import status, viewsets
+from rest_framework import status
 from rest_framework.views import APIView
-from .models import BusStops
 from .serializers import *
-from .apps import PredictionConfig
-from .forms import JourneyForm
-from django.contrib import messages
 from rest_framework import generics
+import joblib
+from .bus_stop_hashmap import BusStopHashmap
+from .apps import PredictionConfig
+import os
 
-'''will be model prediction function'''
+
+def progr_number_mapping(route, stop_id):
+    progr_number = BusStopHashmap.cache[(route, stop_id)]
+    return progr_number
+
+
+def datetime_process(data):
+    hour, day_of_week, day_of_year, bank_holiday = 0, 0, 0, 0
+    return hour, day_of_week, day_of_year, bank_holiday
+
+
 def journey_predict(data):
-    return int(data['route']) + int(data['time'])
+    hour, day_of_week, day_of_year, bank_holiday = datetime_process(data['datetime'])
+    route = data['route']
+    direction = data['direction']
+    stop_id = data['stop_id']
+
+    progrnumber = progr_number_mapping(route, stop_id)
+    temp = data['temp']
+
+    path = 'route_' + route + '__lgbm_model.pkl'
+    model_path = os.path.join(PredictionConfig.MODELS_FOLDER, path)
+    ml_model = joblib.load(model_path)
+    # y_prediction = ml_model.predict(x_test)
+
+    return model_path
 
 
 class BusStopsListView(generics.ListAPIView):
@@ -23,20 +44,6 @@ class BusStopsListView(generics.ListAPIView):
         queryset = BusStops.objects
         data = queryset.filter(route=route)
         return data
-
-
-# class UserForm(APIView):
-#     def post(self, request):
-#         if request.method == 'POST':
-#             form = JourneyForm(request.POST)
-#             if form.is_valid():
-#                 route = form.cleaned_data['route']
-#                 time = form.cleaned_data['time']
-#                 data = request.POST.dict( )
-#                 answer = journey_predict(data)
-#                 messages.success(request, 'Time: {}'.format(answer))
-#         form = JourneyForm()
-#         return Response(request, {'form': form})
 
 
 class Journey(APIView):
