@@ -1,0 +1,25 @@
+.toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: black;
+  height: 56px;
+}
+
+.toolbarNav {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  padding: 0 1rem;
+}
+
+.toolbarLogo {
+  margin-left: 1rem;
+}
+
+.toolbarLogo a {
+  color: yellow;
+  text-decoration: none;
+  font-size: 1.5rem;
+}
