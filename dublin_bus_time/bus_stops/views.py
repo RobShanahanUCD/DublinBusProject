@@ -7,6 +7,11 @@ import joblib
 from .bus_stop_hashmap import BusStopHashmap
 from .apps import PredictionConfig
 import os
+import sys
+import pandas as pd
+
+sys.path.append(os.getcwd())
+from .ml_models import train_model as ml
 
 
 def progr_number_mapping(route, stop_id):
@@ -15,7 +20,7 @@ def progr_number_mapping(route, stop_id):
 
 
 def datetime_process(data):
-    hour, day_of_week, day_of_year, bank_holiday = 0, 0, 0, 0
+    hour, day_of_week, day_of_year, bank_holiday = 20, 3, 100, 0
     return hour, day_of_week, day_of_year, bank_holiday
 
 
@@ -28,12 +33,25 @@ def journey_predict(data):
     progrnumber = progr_number_mapping(route, stop_id)
     temp = data['temp']
 
+    x_input = {
+        'ProgrNumber': [progrnumber],
+        'Direction': [int(direction)],
+        'bank_holiday': [int(bank_holiday)],
+        'temp': [float(temp)],
+        'day_of_year': [day_of_year],
+        'day_of_week': [day_of_week],
+        'hour': [hour]
+    }
+    x_input_df = pd.DataFrame(x_input)
+
+    x_input_df = ml.ModelTraining().time_transform(x_input_df, 'day_of_week', 7)
+    x_input_df = ml.ModelTraining().time_transform(x_input_df, 'hour', 24)
+
     path = 'route_' + route + '__lgbm_model.pkl'
     model_path = os.path.join(PredictionConfig.MODELS_FOLDER, path)
     ml_model = joblib.load(model_path)
-    # y_prediction = ml_model.predict(x_test)
-
-    return model_path
+    y_prediction = ml_model.predict(x_input_df)
+    return y_prediction[0]
 
 
 class BusStopsListView(generics.ListAPIView):
@@ -54,5 +72,5 @@ class Journey(APIView):
         prediction = journey_predict(data)
         # prediction_model = PredictionConfig.classifier
 
-        predictions = {"Prediced Journey Time": prediction}
-        return Response(predictions, status=status.HTTP_201_CREATED)
+        predictions = {"PredicedJourneyTime": prediction}
+        return Response(predictions, status=status.HTTP_200_OK)
