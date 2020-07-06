@@ -9,7 +9,6 @@ from django.db import models
 
 
 class Journey(models.Model):
-
     route = models.CharField(max_length=12)
     datetime = models.CharField(max_length=20)
 
@@ -18,7 +17,6 @@ class Journey(models.Model):
 
 
 class BusStops(models.Model):
-
     stopid = models.IntegerField(primary_key=True)
     stopname = models.CharField(max_length=60, blank=True, null=True)
     route = models.CharField(max_length=12)
@@ -50,7 +48,7 @@ class FutureWeatherData(models.Model):
     time = models.TimeField(blank=True, null=True)
     day = models.CharField(max_length=45, blank=True, null=True)
     datetime = models.DateTimeField(db_column='dateTime', blank=True, null=True)  # Field name made lowercase.
-    epoch = models.IntegerField()
+    epoch = models.IntegerField( )
     currdatetime = models.DateTimeField(db_column='currDateTime', primary_key=True)  # Field name made lowercase.
 
     class Meta:
@@ -115,3 +113,13 @@ class Weather(models.Model):
     class Meta:
         managed = False
         db_table = 'weather'
+
+
+class Routesstops(models.Model):
+    route = models.CharField(max_length=10, blank=True, null=True)
+    stopid = models.CharField(max_length=10, blank=True, null=True)
+    progr_number = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'routesstops'

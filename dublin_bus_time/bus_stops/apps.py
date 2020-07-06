@@ -1,4 +1,5 @@
 from django.apps import AppConfig
+import os
 
 
 class BusStopsConfig(AppConfig):
@@ -7,10 +8,5 @@ class BusStopsConfig(AppConfig):
 
 class PredictionConfig(AppConfig):
     name = 'Prediction'
-    # #CLASSIFIER_FOLDER = Path("classifier")
-    # BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    # CLASSIFIER_FOLDER = os.path.join(BASE_DIR, 'Prediction/classifier/')
-    # #CLASSIFIER_FILE = CLASSIFIER_FOLDER / "IRISRandomForestClassifier.joblib"
-    # CLASSIFIER_FILE = os.path.join(CLASSIFIER_FOLDER, "IRISRandomForestClassifier.joblib")
-    # classifier = load(CLASSIFIER_FILE)
-
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    MODELS_FOLDER = os.path.join(BASE_DIR, 'bus_stops/ml_models/')

@@ -1,18 +1,57 @@
-from django.shortcuts import render
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from rest_framework import status, viewsets
+from rest_framework import status
 from rest_framework.views import APIView
-from .models import BusStops
 from .serializers import *
-from .apps import PredictionConfig
-from .forms import JourneyForm
-from django.contrib import messages
 from rest_framework import generics
+import joblib
+from .bus_stop_hashmap import BusStopHashmap
+from .apps import PredictionConfig
+import os
+import sys
+import pandas as pd
 
-'''will be model prediction function'''
+sys.path.append(os.getcwd())
+from .ml_models import train_model as ml
+
+
+def progr_number_mapping(route, stop_id):
+    progr_number = BusStopHashmap.cache[(route, stop_id)]
+    return progr_number
+
+
+def datetime_process(data):
+    hour, day_of_week, day_of_year, bank_holiday = 20, 3, 100, 0
+    return hour, day_of_week, day_of_year, bank_holiday
+
+
 def journey_predict(data):
-    return int(data['route']) + int(data['time'])
+    hour, day_of_week, day_of_year, bank_holiday = datetime_process(data['datetime'])
+    route = data['route']
+    direction = data['direction']
+    stop_id = data['stop_id']
+
+    progrnumber = progr_number_mapping(route, stop_id)
+    temp = data['temp']
+
+    x_input = {
+        'ProgrNumber': [progrnumber],
+        'Direction': [int(direction)],
+        'bank_holiday': [int(bank_holiday)],
+        'temp': [float(temp)],
+        'day_of_year': [day_of_year],
+        'day_of_week': [day_of_week],
+        'hour': [hour]
+    }
+    x_input_df = pd.DataFrame(x_input)
+
+    x_input_df = ml.ModelTraining().time_transform(x_input_df, 'day_of_week', 7)
+    x_input_df = ml.ModelTraining().time_transform(x_input_df, 'hour', 24)
+
+    path = 'route_' + route + '__lgbm_model.pkl'
+    model_path = os.path.join(PredictionConfig.MODELS_FOLDER, path)
+    ml_model = joblib.load(model_path)
+    y_prediction = ml_model.predict(x_input_df)
+    return y_prediction[0]
 
 
 class BusStopsListView(generics.ListAPIView):
@@ -25,20 +64,6 @@ class BusStopsListView(generics.ListAPIView):
         return data
 
 
-# class UserForm(APIView):
-#     def post(self, request):
-#         if request.method == 'POST':
-#             form = JourneyForm(request.POST)
-#             if form.is_valid():
-#                 route = form.cleaned_data['route']
-#                 time = form.cleaned_data['time']
-#                 data = request.POST.dict( )
-#                 answer = journey_predict(data)
-#                 messages.success(request, 'Time: {}'.format(answer))
-#         form = JourneyForm()
-#         return Response(request, {'form': form})
-
-
 class Journey(APIView):
     def post(self, request):
         """Main function for our web app. Takes in the user information from the frontend.
@@ -47,5 +72,5 @@ class Journey(APIView):
         prediction = journey_predict(data)
         # prediction_model = PredictionConfig.classifier
 
-        predictions = {"Prediced Journey Time": prediction}
-        return Response(predictions, status=status.HTTP_201_CREATED)
+        predictions = {"PredicedJourneyTime": prediction}
+        return Response(predictions, status=status.HTTP_200_OK)
