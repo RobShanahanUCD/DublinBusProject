@@ -4,6 +4,7 @@ import Toolbar from "./components/Toolbar/Toolbar";
 import SideDrawer from "./components/SideDrawer/SideDrawer";
 import Backdrop from "./components/Backdrop/Backdrop";
 import CurrentLocation from "./components/Map";
+import { Key } from './key' // API key
 
 export class MapContainer extends Component {
   state = {
@@ -28,7 +29,17 @@ export class MapContainer extends Component {
       selectedPlace: props,
       activeMarker: marker,
       showingInfoWindow: true,
-    });
+    }); 
+
+  //When click anywhere on the map it can close the markers, need to be fixed
+  onMapClicked = (props) => {
+    if (this.state.showingInfoWindow) {
+      this.setState({
+        showingInfoWindow: false,
+        activeMarker: null
+      })
+    }
+  };
 
   onClose = (props) => {
     if (this.state.showingInfoWindow) {
@@ -39,6 +50,7 @@ export class MapContainer extends Component {
     }
   };
 
+
   render() {
     let backdrop;
 
@@ -47,34 +59,32 @@ export class MapContainer extends Component {
     }
 
     return (
-      <div style={{ height: "100%" }}>
+      <div style={{ height: "100%" }} className="MapContainer" >
         <Toolbar drawerClickHandler={this.drawerToggleClickHandler} />
         <SideDrawer show={this.state.sideDrawerOpen} />
         {backdrop}
-        <main>
-          <div>
-            <CurrentLocation
-              centerAroundCurrentLocation
-              google={this.props.google}
+        <div onClick={this.onMapClicked}>
+          <CurrentLocation
+            centerAroundCurrentLocation
+            google={this.props.google}
+          >
+            <Marker onClick={this.onMarkerClick} name={"Current Location"} />
+            <InfoWindow
+              marker={this.state.activeMarker}
+              visible={this.state.showingInfoWindow}
+              onClose={this.onClose}
             >
-              <Marker onClick={this.onMarkerClick} name={"Current Location"} />
-              <InfoWindow
-                marker={this.state.activeMarker}
-                visible={this.state.showingInfoWindow}
-                onClose={this.onClose}
-              >
-                <div>
-                  <h4>{this.state.selectedPlace.name}</h4>
-                </div>
-              </InfoWindow>
-            </CurrentLocation>
-          </div>
-        </main>
+              <div>
+                <h4>{this.state.selectedPlace.name}</h4>
+              </div>
+            </InfoWindow>
+          </CurrentLocation>
+        </div>
       </div>
     );
   }
 }
 
 export default GoogleApiWrapper({
-  apiKey: "", //Enter API Key here
+  apiKey: (Key), //Enter API Key here
 })(MapContainer);
