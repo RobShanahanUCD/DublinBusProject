@@ -33,3 +33,6 @@ dublin_bus_time/bus_stops/ml_models/pickle_builder.py
 *__.pkl
 temp.py
 routes_stops_mapping.py
+__pycache__
+.DS_Store
+frontend
