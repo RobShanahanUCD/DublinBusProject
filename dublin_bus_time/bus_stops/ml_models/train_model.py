@@ -4,7 +4,7 @@ import numpy as np
 import lightgbm as lgb
 import joblib
 from sklearn.model_selection import cross_val_score
-
+from .all_route import RouteList
 
 class ModelTraining:
 
@@ -80,11 +80,14 @@ class ModelTraining:
 
 
 if __name__ == '__main__':
-    routes = [
-        'route_14__.pkl',
-        'route_63__.pkl',
-        'route_79A__.pkl'
-    ]
+    route_list = RouteList().route_list
+    route_list = ["route_" + route + "__.pkl" for route in route_list]
+    print(route_list)
 
-    for route_path in routes:
-        ModelTraining().train(route_path)
+    log = pd.DataFrame(columns=["model", "mae", "avg_journey_time", "error_rate", "scores"])
+    for route_path in route_list:
+        print(route_path)
+        # if os.path.isfile('./' + route_path.split(".")[0] + 'lgbm_model.pkl'):
+        #     continue
+        log = log.append(ModelTraining().train(route_path), ignore_index=True)
+    log.to_csv("training_log.csv", index=False)
