@@ -10,13 +10,13 @@ const mapStyles = {
   },
 };
 
-const camelize = function(str) {
-  return str.split(' ').map(function(word){
-    return word.charAt(0).toUpperCase() + word.slice(1);
-  }).join('');
-}
+// const camelize = function(str) {
+//   return str.split(' ').map(function(word){
+//     return word.charAt(0).toUpperCase() + word.slice(1);
+//   }).join('');
+// }
 
-const evtNames = ['ready', 'click', 'dragend'];
+// const evtNames = ['ready', 'click', 'dragend'];
 
 export class CurrentLocation extends React.Component {
   constructor(props) {
@@ -56,7 +56,7 @@ export class CurrentLocation extends React.Component {
   componentDidMount() {
     if (this.props.centerAroundCurrentLocation) {
       if (navigator && navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(pos => {
+        navigator.geolocation.getCurrentPosition((pos) => {
           const coords = pos.coords;
           this.setState({
             currentLocation: {
@@ -84,41 +84,44 @@ export class CurrentLocation extends React.Component {
       let { zoom } = this.props;
       const { lat, lng } = this.state.currentLocation;
       const center = new maps.LatLng(lat, lng);
-      const mapConfig = Object.assign({}, {
+      const mapConfig = Object.assign(
+        {},
+        {
           center: center,
           zoom: zoom,
-        })
+        }
+      );
       //maps.Map() is the constructor that instantiates the map
       this.map = new maps.Map(node, mapConfig);
-      evtNames.forEach(e => {
-        this.map.addListener(e, this.handleEvent(e));
-      });
+      // evtNames.forEach((e) => {
+      //   this.map.addListener(e, this.handleEvent(e));
+      // });
     }
   }
 
-  handleEvent(evtName) {
-    let timeout;
-    const handlerName = `on${camelize(evtName)}`;;
+  // handleEvent(evtName) {
+  //   let timeout;
+  //   const handlerName = `on${camelize(evtName)}`;;
 
-    return (e) => {
-      if (timeout) {
-        clearTimeout(timeout);
-        timeout = null;
-      }
-      timeout = setTimeout(() => {
-        if (this.props[handlerName]) {
-          this.props[handlerName](this.props, this.map, e);
-        }
-      }, 0);
-    }
-  }
+  //   return (e) => {
+  //     if (timeout) {
+  //       clearTimeout(timeout);
+  //       timeout = null;
+  //     }
+  //     timeout = setTimeout(() => {
+  //       if (this.props[handlerName]) {
+  //         this.props[handlerName](this.props, this.map, e);
+  //       }
+  //     }, 0);
+  //   }
+  // }
 
   renderChildren() {
     const { children } = this.props;
 
     if (!children) return;
 
-    return React.Children.map(children, c => {
+    return React.Children.map(children, (c) => {
       if (!c) return;
       return React.cloneElement(c, {
         map: this.map,
@@ -143,14 +146,14 @@ export class CurrentLocation extends React.Component {
 
 export default CurrentLocation;
 
-CurrentLocation.propTypes = {
-  google: React.PropTypes.object,
-  zoom: React.PropTypes.number,
-  initialCenter: React.PropTypes.object,
-  centerAroundCurrentLocation: React.PropTypes.bool,
-  onMove: React.PropTypes.func,
-  evtNames: evtNames.forEach(e => Map.propTypes[camelize(e)] = T.func)
-}
+// CurrentLocation.propTypes = {
+//   google: React.PropTypes.object,
+//   zoom: React.PropTypes.number,
+//   initialCenter: React.PropTypes.object,
+//   centerAroundCurrentLocation: React.PropTypes.bool,
+//   onMove: React.PropTypes.func,
+//   evtNames: evtNames.forEach(e => Map.propTypes[camelize(e)] = T.func)
+// }
 
 CurrentLocation.defaultProps = {
   zoom: 14,
@@ -158,9 +161,7 @@ CurrentLocation.defaultProps = {
     lat: 53.34,
     lng: -6.26,
   },
-  onMove: function() {}, // default prop
-  centerAroundCurrentLocation: false,
-  visible: true
+  // onMove: function() {}, // default prop
+  // centerAroundCurrentLocation: false,
+  // visible: true
 };
-
-
