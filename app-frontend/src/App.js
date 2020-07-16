@@ -1,17 +1,17 @@
 import React, { Component } from "react";
-import { GoogleApiWrapper, InfoWindow, Marker } from "google-maps-react";
 import Toolbar from "./components/Toolbar/Toolbar";
 import SideDrawer from "./components/SideDrawer/SideDrawer";
 import Backdrop from "./components/Backdrop/Backdrop";
-import CurrentLocation from "./components/Map";
+import NewMap from "./components/Map/newMap";
 
-export class MapContainer extends Component {
-  state = {
-    showingInfoWindow: false,
-    activeMarker: {},
-    selectedPlace: {},
-    sideDrawerOpen: false,
-  };
+export class App extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      sideDrawerOpen: false,
+    };
+  }
 
   drawerToggleClickHandler = () => {
     this.setState((prevState) => {
@@ -30,6 +30,16 @@ export class MapContainer extends Component {
       showingInfoWindow: true,
     });
 
+  //When click anywhere on the map it can close the markers, need to be fixed
+  onMapClicked = (props) => {
+    if (this.state.showingInfoWindow) {
+      this.setState({
+        showingInfoWindow: false,
+        activeMarker: null,
+      });
+    }
+  };
+
   onClose = (props) => {
     if (this.state.showingInfoWindow) {
       this.setState({
@@ -47,34 +57,17 @@ export class MapContainer extends Component {
     }
 
     return (
-      <div style={{ height: "100%" }}>
+      <div style={{ height: "100%" }} className="MapContainer">
         <Toolbar drawerClickHandler={this.drawerToggleClickHandler} />
         <SideDrawer show={this.state.sideDrawerOpen} />
         {backdrop}
-        <main>
-          <div>
-            <CurrentLocation
-              centerAroundCurrentLocation
-              google={this.props.google}
-            >
-              <Marker onClick={this.onMarkerClick} name={"Current Location"} />
-              <InfoWindow
-                marker={this.state.activeMarker}
-                visible={this.state.showingInfoWindow}
-                onClose={this.onClose}
-              >
-                <div>
-                  <h4>{this.state.selectedPlace.name}</h4>
-                </div>
-              </InfoWindow>
-            </CurrentLocation>
-          </div>
-        </main>
+        <div></div>
+        <div onClick={this.onMapClicked}>
+          <NewMap />
+        </div>
       </div>
     );
   }
 }
 
-export default GoogleApiWrapper({
-  apiKey: "", //Enter API Key here
-})(MapContainer);
+export default App;

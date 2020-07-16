@@ -22,7 +22,7 @@ if __name__ == '__main__':
     database = 'dublin_bus_time'
     URI = f'mysql+pymysql://{username}:{password}@{host}/{database}'
 
-    routes = RouteList.route_list
+    routes = RouteList().route_list
     routes_set = set(routes)
 
     engine = create_engine(URI, convert_unicode=True, echo=False)
