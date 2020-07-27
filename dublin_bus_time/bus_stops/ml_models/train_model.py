@@ -4,7 +4,7 @@ import numpy as np
 import lightgbm as lgb
 import joblib
 from sklearn.model_selection import cross_val_score
-from dublin_bus_time.bus_stops.ml_models.all_route import RouteList
+from bus_stops.ml_models.all_route import RouteList
 
 
 class ModelTraining:

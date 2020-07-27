@@ -19,12 +19,12 @@
     <link
       rel="stylesheet"
       type="text/css"
-      href="{% static 'dublin_bus_app/main.css' %}"
+      href="{% static 'main.css' %}"
     />
 
     <title>Dublin Bus</title>
 
-    <script src="{% static 'dublin_bus_app/javascript.js' %}"></script>
+    <script src="{% static 'main.js' %}"></script>
     <script
       async
       defer
@@ -53,15 +53,8 @@
     </div>
 
     <input id="origin" type="text" class="controls" placeholder="Origin" />
-    <input
-      id="destination"
-      type="text"
-      class="controls"
-      placeholder="Destination"
-    />
-    <!-- <button type="button" class="btn btn-success" id="directions_button">
-      Directions
-    </button> -->
+    <input id="destination"  type="text"  class="controls" placeholder="Destination"/>
+    <button type="button" class="btn btn-success" id="directions_button"> GO! </button>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

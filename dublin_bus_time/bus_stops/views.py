@@ -10,8 +10,11 @@ from .apps import PredictionConfig
 import os
 import sys
 import pandas as pd
+from django.shortcuts import render
+from rest_framework.renderers import TemplateHTMLRenderer
 
-sys.path.append(os.getcwd( ))
+
+sys.path.append(os.getcwd())
 from .ml_models import train_model as ml
 
 
@@ -77,12 +80,17 @@ class BusStopsListView(generics.ListAPIView):
 
 
 class Journey(APIView):
+    # renderer_classes = [TemplateHTMLRenderer]
+    # template_name = './templates/index.html'
+
+    def get(self, request):
+        return render(request, 'index.html')
+
     def post(self, request):
         """Main function for our web app. Takes in the user information from the frontend.
         Passes this information into our model to generate an estimation for the journey time."""
         data = request.data
         prediction = journey_predict(data)
-        # prediction_model = PredictionConfig.classifier
 
         predictions = {"PredicedJourneyTime": prediction}
-        return Response(predictions, status=status.HTTP_200_OK)
+        return render(request, 'index.html', predictions)
