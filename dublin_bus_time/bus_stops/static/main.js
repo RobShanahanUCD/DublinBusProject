@@ -171,9 +171,7 @@ function AutocompleteDirectionsHandler(map) {
   this.setupPlaceChangedListener(destinationAutocomplete, "DEST");
 
   this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(originInput);
-  this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(
-    destinationInput
-  );
+  this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(destinationInput);
 }
 
 AutocompleteDirectionsHandler.prototype.setupPlaceChangedListener = function (
@@ -217,6 +215,12 @@ AutocompleteDirectionsHandler.prototype.route = function () {
     function (response, status) {
       if (status === "OK") {
         me.directionsRenderer.setDirections(response);
+        var dataToBackend = response.routes[0].legs[0].steps
+        console.log(dataToBackend);
+        axios.post('http://127.0.0.1:8000/predict/', dataToBackend)
+        .then((res) => { console.log(res.data) }) // Journey Time is here
+        .catch((error) => { console.log(error) })
+
       } else {
         window.alert("Directions request failed due to " + status);
       }
