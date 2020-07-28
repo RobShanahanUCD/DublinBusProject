@@ -214,6 +214,11 @@ AutocompleteDirectionsHandler.prototype.route = function () {
     function (response, status) {
       if (status === "OK") {
         me.directionsRenderer.setDirections(response);
+        dataToBackend = response.routes[0].legs[0].steps
+        axios.post('http://127.0.0.1:8000/predict/', dataToBackend)
+        .then((res) => { console.table(res.data) })
+        .catch((error) => { console.error(error) })
+
       } else {
         window.alert("Directions request failed due to " + status);
       }
