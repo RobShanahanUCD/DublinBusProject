@@ -1,8 +1,8 @@
 window.map = undefined;
 // Location of Dublin
 var dublin = {
-  lat: 53.35014,
-  lng: -6.266155,
+  lat: 53.3498,
+  lng: -6.2603,
 };
 var infoWindow = null;
 
@@ -25,7 +25,7 @@ function centerDublin(controlDiv, map) {
 
   // Set CSS for the control interior.
   var controlImg = document.createElement("img");
-  controlImg.src = "";
+  controlImg.src = "static/dublin_bus_app/icons/centre.png";
   controlImg.setAttribute("height", "35");
   controlImg.setAttribute("width", "35");
   controlUI.appendChild(controlImg);
@@ -54,7 +54,7 @@ function centerUser(controlDiv, map) {
 
   // Set CSS for the control interior.
   var controlImg = document.createElement("img");
-  controlImg.src = "";
+  controlImg.src = "static/dublin_bus_app/icons/user.png";
   controlImg.setAttribute("height", "35");
   controlImg.setAttribute("width", "35");
   controlUI.appendChild(controlImg);
@@ -115,11 +115,8 @@ function initMap() {
     // Allows control of position of street view element
     streetViewControl: false,
     // Allows control of position of fullscreen element
-    fullscreenControlOptions: {
-      position: google.maps.ControlPosition.RIGHT_TOP,
-    },
+    fullscreenControl: false,
   });
-  //   directionsRenderer.setMap(map);
 
   // Create button to recenter map on Dublin
   var centerControlDivDublin = document.createElement("div");
@@ -171,7 +168,9 @@ function AutocompleteDirectionsHandler(map) {
   this.setupPlaceChangedListener(destinationAutocomplete, "DEST");
 
   this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(originInput);
-  this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(destinationInput);
+  this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(
+    destinationInput
+  );
 }
 
 AutocompleteDirectionsHandler.prototype.setupPlaceChangedListener = function (
@@ -215,12 +214,6 @@ AutocompleteDirectionsHandler.prototype.route = function () {
     function (response, status) {
       if (status === "OK") {
         me.directionsRenderer.setDirections(response);
-        var dataToBackend = response.routes[0].legs[0].steps
-        console.log(dataToBackend);
-        axios.post('http://127.0.0.1:8000/predict/', dataToBackend)
-        .then((res) => { console.log(res.data) }) // Journey Time is here
-        .catch((error) => { console.log(error) })
-
       } else {
         window.alert("Directions request failed due to " + status);
       }
@@ -228,16 +221,12 @@ AutocompleteDirectionsHandler.prototype.route = function () {
   );
 };
 
-// document.getElementById("directions_button").addEventListener("click", function() {
-
-// })
-
-function openSidebar() {
-  document.getElementById("appSidebar").style.width = "250px";
-  document.getElementById("main").style.marginLeft = "250px";
-}
-
-function closeSidebar() {
-  document.getElementById("appSidebar").style.width = "0px";
-  document.getElementById("main").style.marginLeft = "0px";
+// Toggle the menu
+function toggleMenu() {
+  var x = document.getElementById("accordionExample");
+  if (x.style.display === "block") {
+    x.style.display = "none";
+  } else {
+    x.style.display = "block";
+  }
 }

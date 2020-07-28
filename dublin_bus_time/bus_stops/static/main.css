@@ -1,90 +1,41 @@
-body {
-  background: #fafafa;
-  color: #333333;
+/* Navbar styling */
+.menuBar {
+  overflow: hidden;
+  background-color: #000000;
+  position: relative;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  color: #444444;
-}
-
-ul {
-  margin: 0;
-}
-
-.bg-steel {
+.menuBar #accordionExample {
+  display: none;
+  position: fixed;
+  height: 92vh;
+  width: 100vw;
+  z-index: 1;
+  border-top: 2px solid yellow;
   background-color: #000000;
 }
 
-.site-header .navbar-nav .nav-link {
-  color: #cbd5db;
+.menuBar a {
+  color: yellow;
+  padding: 6px 20px;
+  text-decoration: none;
+  font-size: 25px;
+  display: inline-block;
 }
 
-.site-header .navbar-nav .nav-link:hover {
-  color: #ffffff;
-}
-
-.site-header .navbar-nav .nav-link.active {
-  font-weight: 500;
+.menuBar a.icon {
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
 #map {
-  height: 93vh;
+  height: 92vh;
   max-width: none;
 }
 
-.sidebar {
-  height: 100%;
-  width: 0;
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  background-color: #000000;
-  overflow-x: hidden;
-  transition: 0.5s;
-  padding-top: 60px;
-}
-
-.sidebar a {
-  padding: 8px 8px 8px 32px;
-  text-decoration: none;
-  font-size: 25px;
-  color: #818181;
-  display: block;
-  transition: 0.3s;
-}
-
-.sidebar a:hover {
-  color: yellow;
-}
-
-.sidebar .closebtn {
-  position: absolute;
-  top: 0;
-  right: 25px;
-  font-size: 36px;
-  margin-left: 50px;
-}
-
-.openbtn {
-  font-size: 20px;
-  cursor: pointer;
-  background-color: #000000;
-  color: yellow;
-  padding: 10px 15px;
-  border: none;
-}
-
-.openbtn:hover {
-  color: white;
-}
-
-#main {
-  background-color: #000000;
-  transition: margin-left 0.5s;
+.card-body {
+  height: 310px;
+  padding: 0;
 }
