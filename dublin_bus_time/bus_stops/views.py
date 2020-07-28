@@ -35,31 +35,22 @@ class Journey(APIView):
     def post(self, request):
         """Main function for our web app. Takes in the user information from the frontend.
         Passes this information into our model to generate an estimation for the journey time."""
+
+        # IB = inbound / going / northbound / eastbound 1
+        # OB = outbound / back / southbound / westbound 2
         data = request.data
-        walking, bus = self.json_extraction(data)
-        print(bus)
-        # prediction = self.journey_predict(data)
-        prediction = bus
+        bus_journey_time = 0
+        for step in data['bus_data']:
+            try:
+                bus_journey_time += (self.journey_predict(step['arrival'], step['route']) -
+                                     self.journey_predict(step['departure'], step['route']))
+            except Exception as e:
+                print(e)
+                bus_journey_time += step['duration']
+        walking_time = sum(data['walking_data'])
+        prediction = bus_journey_time + walking_time
         predictions = {"PredicedJourneyTime": prediction}
         return Response(predictions, status=status.HTTP_200_OK)
-
-    def json_extraction(self, data):
-        filtered_data = 0
-        walking = list()
-        bus = list()
-        for step in data:
-            if step['travel_mode'] == "WALKING":
-                walking.append({"duration": step["duration"].get("value", 0)})
-            elif step['travel_mode'] == "TRANSIT":
-                bus.append({"duration": step["duration"].get("value", 0,),
-                            "distance": step["distance"].get("value", 0,),
-                            "arrival_stop": step["transit"]["arrival_stop"].get("name", None),
-                            "arrival_time": step["transit"]["arrival_time"].get("value", None),
-                            "departure_stop": step["transit"]["departure_stop"].get("name", None),
-                            "departure_time": step["transit"]["departure_time"].get("value", None)
-                            })
-
-        return walking, bus
 
     def stop_id_mapping(self, route, stop_name):
         stop_id = BusNameHashmap.cache[(route, stop_name)]
@@ -69,13 +60,20 @@ class Journey(APIView):
         progr_number = BusStopHashmap.cache[(route, stop_id)]
         return progr_number
 
-    def datetime_process(self, data):
-        hour, day_of_week, day_of_year, bank_holiday = 20, 3, 100, 0
+    def datetime_process(self, timestamp):
+        hour = pd.to_datetime(timestamp, unit='ms').hour
+        day_of_week = pd.to_datetime(timestamp, unit='ms').dayofweek
+        day_of_year = pd.to_datetime(timestamp, unit='ms').dayofyear
+        bank_holiday_set = {1, 76, 103, 124, 152, 215, 299, 359, 360}
+        bank_holiday = 1 if day_of_year in bank_holiday_set else 0
         return hour, day_of_week, day_of_year, bank_holiday
 
-    def journey_predict(self, data):
-        hour, day_of_week, day_of_year, bank_holiday = self.datetime_process(data['datetime'])
-        route = data['route']
+    def get_direction(self, ):
+
+    def journey_predict(self, data, route):
+
+        hour, day_of_week, day_of_year, bank_holiday = self.datetime_process(data['timestamp'])
+
         direction = data['direction']
 
         if len(data['stop_id'].split(',')) < 2:
@@ -85,8 +83,8 @@ class Journey(APIView):
             stop_id = data['stop_id'].split(',')[1].split(" ")[-1]
 
         progrnumber = self.progr_number_mapping(route, stop_id)
-        temp = data['temp']
-
+        # temp = data['temp']
+        temp = 20
         x_input = {
             'ProgrNumber': [progrnumber],
             'Direction': [int(direction)],

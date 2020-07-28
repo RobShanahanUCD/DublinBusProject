@@ -25,7 +25,7 @@ function centerDublin(controlDiv, map) {
 
   // Set CSS for the control interior.
   var controlImg = document.createElement("img");
-  controlImg.src = "static/dublin_bus_app/icons/centre.png";
+  controlImg.src = "static/icons/centre.png";
   controlImg.setAttribute("height", "35");
   controlImg.setAttribute("width", "35");
   controlUI.appendChild(controlImg);
@@ -54,7 +54,7 @@ function centerUser(controlDiv, map) {
 
   // Set CSS for the control interior.
   var controlImg = document.createElement("img");
-  controlImg.src = "static/dublin_bus_app/icons/user.png";
+  controlImg.src = "static/icons/user.png";
   controlImg.setAttribute("height", "35");
   controlImg.setAttribute("width", "35");
   controlUI.appendChild(controlImg);
@@ -99,7 +99,7 @@ function centerUser(controlDiv, map) {
   });
 }
 
-// Initialise and add the map
+// Initialize and add the map
 function initMap() {
   // Centre the map at Dublin
   map = new google.maps.Map(document.getElementById("map"), {
@@ -214,6 +214,43 @@ AutocompleteDirectionsHandler.prototype.route = function () {
     function (response, status) {
       if (status === "OK") {
         me.directionsRenderer.setDirections(response);
+        var busData = [];
+        var walkingData = [];
+
+        var responseData = response.routes[0].legs[0].steps;
+        console.log(responseData);
+        for (let i = 0; i < responseData.length; i++) {
+            if  (responseData[i]['travel_mode'] === "TRANSIT") {
+                var busStep = {
+                  'route': responseData[i]['transit']['line']['short_name'],
+                  'duration': responseData[i]['duration']['value'],
+                  'departure' :{              
+                  'name': responseData[i]['transit']['departure_stop']['name'],
+                  'location': [responseData[i]['transit']['departure_stop']['location'].lat(),
+                                              responseData[i]['transit']['departure_stop']['location'].lng()],
+                  'timestamp': responseData[i]['transit']['arrival_time']['value'].valueOf()
+                                },
+                  'arrival':{
+                  'name': responseData[i]['transit']['arrival_stop']['name'],
+                  'location': [responseData[i]['transit']['arrival_stop']['location'].lat(),
+                                              responseData[i]['transit']['arrival_stop']['location'].lng()],
+                  'timestamp': responseData[i]['transit']['arrival_time']['value'].valueOf()
+                                }
+              };
+                busData.push(busStep);
+            }
+
+            else if (responseData[i]['travel_mode'] === "WALKING") {
+              walkingData.push(responseData[i]['duration']['value']);
+            }
+
+          }
+        console.log(busData);
+        console.log({'walking_data': walkingData,'bus_data': busData});
+
+        axios.post("http://localhost:8000/predict/", {'walking_data': walkingData,'bus_data': busData})
+        .then((res) => { console.log(res.data) })
+        .catch((error) => { console.log(error) })
       } else {
         window.alert("Directions request failed due to " + status);
       }
