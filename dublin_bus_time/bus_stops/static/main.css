@@ -1,0 +1,41 @@
+/* Navbar styling */
+.menuBar {
+  overflow: hidden;
+  background-color: #000000;
+  position: relative;
+}
+
+.menuBar #accordionExample {
+  display: none;
+  position: fixed;
+  height: 92vh;
+  width: 100vw;
+  z-index: 1;
+  border-top: 2px solid yellow;
+  background-color: #000000;
+}
+
+.menuBar a {
+  color: yellow;
+  padding: 6px 20px;
+  text-decoration: none;
+  font-size: 25px;
+  display: inline-block;
+}
+
+.menuBar a.icon {
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+#map {
+  height: 92vh;
+  max-width: none;
+}
+
+.card-body {
+  height: 310px;
+  padding: 0;
+}

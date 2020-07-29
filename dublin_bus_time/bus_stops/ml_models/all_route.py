@@ -1,4 +1,5 @@
 class RouteList:
+    """All route list"""
     route_list = [
         "1",
         "4",
