@@ -222,6 +222,7 @@ AutocompleteDirectionsHandler.prototype.route = function () {
         for (let i = 0; i < responseData.length; i++) {
             if  (responseData[i]['travel_mode'] === "TRANSIT") {
                 var busStep = {
+                  'distance' : responseData[i]['distance']['value'],
                   'route': responseData[i]['transit']['line']['short_name'],
                   'duration': responseData[i]['duration']['value'],
                   'departure' :{              

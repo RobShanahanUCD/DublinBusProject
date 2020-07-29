@@ -36,16 +36,16 @@ class Journey(APIView):
         """Main function for our web app. Takes in the user information from the frontend.
         Passes this information into our model to generate an estimation for the journey time."""
 
-        # IB = inbound / going / northbound / eastbound 1
-        # OB = outbound / back / southbound / westbound 2
+
         data = request.data
         bus_journey_time = 0
         for step in data['bus_data']:
             try:
-                bus_journey_time += (self.journey_predict(step['arrival'], step['route']) -
-                                     self.journey_predict(step['departure'], step['route']))
+                direction = self.get_direction(step['arrival']['location'], step['departure']['location'])
+                bus_journey_time += (self.journey_predict(step['arrival'], step['route'], direction) -
+                                     self.journey_predict(step['departure'], step['route'], direction))
             except Exception as e:
-                print(e)
+                print("Error", e)
                 bus_journey_time += step['duration']
         walking_time = sum(data['walking_data'])
         prediction = bus_journey_time + walking_time
@@ -57,6 +57,7 @@ class Journey(APIView):
         return stop_id
 
     def progr_number_mapping(self, route, stop_id):
+        print("route:", route, "stop_id:", stop_id)
         progr_number = BusStopHashmap.cache[(route, stop_id)]
         return progr_number
 
@@ -68,19 +69,31 @@ class Journey(APIView):
         bank_holiday = 1 if day_of_year in bank_holiday_set else 0
         return hour, day_of_week, day_of_year, bank_holiday
 
-    def get_direction(self, ):
+    def get_direction(self, arrival, departure):
+        # IB = inbound / going / northbound / eastbound 1
+        # OB = outbound / back / southbound / westbound 2
+        lat_diff = arrival[0] - departure[0]
+        lng_diff = arrival[1] - departure[1]
+        if abs(lat_diff) >= abs(lng_diff):
+            direction = 1 if lat_diff > 0 else 2
+        else:
+            direction = 1 if lng_diff > 0 else 2
+        return direction
 
-    def journey_predict(self, data, route):
+    def journey_predict(self, data, route, direction):
 
         hour, day_of_week, day_of_year, bank_holiday = self.datetime_process(data['timestamp'])
+        print(data['name'])
 
-        direction = data['direction']
-
-        if len(data['stop_id'].split(',')) < 2:
-            stop_name = data['stop_id'].split(',')[0]
-            stop_id = self.stop_id_mapping(stop_name)
+        if "stop" in data['name']:
+            print(data['name'].split('stop')[-1].strip())
+            stop_id = str(data['name'].split('stop')[-1].strip())
+            print(stop_id, type(stop_id))
         else:
-            stop_id = data['stop_id'].split(',')[1].split(" ")[-1]
+            print(data['name'].split(','))
+            stop_name = data['name'].strip()
+            stop_id = str(self.stop_id_mapping(route, stop_name))
+            print(stop_id)
 
         progrnumber = self.progr_number_mapping(route, stop_id)
         # temp = data['temp']
@@ -99,10 +112,11 @@ class Journey(APIView):
 
         x_input_df = ml.ModelTraining().time_transform(x_input_df, 'day_of_week', 7)
         x_input_df = ml.ModelTraining().time_transform(x_input_df, 'hour', 24)
-
+        x_input_df['StopPointID'] = x_input_df['StopPointID'].astype('category')
         path = 'route_' + route + '__lgbm_model.pkl'
         model_path = os.path.join(PredictionConfig.MODELS_FOLDER, path)
         ml_model = joblib.load(model_path)
         y_prediction = ml_model.predict(x_input_df)
+        print("prediction", y_prediction[0])
         return y_prediction[0]
 
