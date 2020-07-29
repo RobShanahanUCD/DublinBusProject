@@ -36,4 +36,4 @@ routes_stops_mapping.py
 __pycache__
 .DS_Store
 frontend
-app-frontend
+pickle_maker.py

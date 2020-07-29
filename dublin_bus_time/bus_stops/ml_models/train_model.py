@@ -8,7 +8,7 @@ from bus_stops.ml_models.all_route import RouteList
 
 
 class ModelTraining:
-
+    """Training all the models for all routes"""
     def route_time_process(self, df):
         df['hour'] = (df['ActualTime_Arr'] // 3600) % 24
         return df
@@ -35,10 +35,11 @@ class ModelTraining:
         return combined_df
 
     def remove_outlier(self, df):
-        df = df[np.abs(df["journey_time"] - df["journey_time"].mean( )) <= (1.5 * df["journey_time"].std())]
+        df = df[np.abs(df["journey_time"] - df["journey_time"].mean()) <= (1.5 * df["journey_time"].std())]
         return df
 
     def time_transform(self, df, col, max_val):
+        """Sine-cosine encoding to extract the cyclic property of time"""
         df[col + '_sin'] = np.sin(2 * np.pi * df[col] / max_val)
         df[col + '_cos'] = np.cos(2 * np.pi * df[col] / max_val)
         df = df.drop([col], axis=1)
