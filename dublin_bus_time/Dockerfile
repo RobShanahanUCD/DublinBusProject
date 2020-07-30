@@ -5,17 +5,17 @@ FROM python:3.7
 ENV PYTHONUNBUFFERED 1
 
 # create code folder and set as a working dir
-RUN mkdir /code
-WORKDIR /code
+RUN mkdir /app
+WORKDIR /app
+COPY . /app/
+
 # update pip
 RUN pip install pip -U
-RUN pip install mysqlclient
-RUN pip install pymysql
+
 # copy requirements.txt to code dir
-ADD requirements.txt /code/
+ADD requirements.txt /app/
 # install dependency
-RUN pip install mysqlclient
 RUN pip install -r requirements.txt
-# duplicate current to code
-ADD . /code/
+
+CMD python manage.py runserver 0.0.0.0:$PORT
 

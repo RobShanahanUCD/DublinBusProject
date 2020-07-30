@@ -1,3 +1,5 @@
+mysqlclient==1.4.6
+PyMySQL==0.9.3
 numpy==1.19.0
 lightgbm==2.3.1
 joblib==0.15.1
