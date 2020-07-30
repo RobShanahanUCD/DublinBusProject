@@ -9,6 +9,7 @@ from bus_stops.ml_models.all_route import RouteList
 
 class ModelTraining:
     """Training all the models for all routes"""
+
     def route_time_process(self, df):
         df['hour'] = (df['ActualTime_Arr'] // 3600) % 24
         return df
@@ -35,7 +36,7 @@ class ModelTraining:
         return combined_df
 
     def remove_outlier(self, df):
-        df = df[np.abs(df["journey_time"] - df["journey_time"].mean()) <= (1.5 * df["journey_time"].std())]
+        df = df[np.abs(df["journey_time"] - df["journey_time"].mean( )) <= (1.5 * df["journey_time"].std( ))]
         return df
 
     def time_transform(self, df, col, max_val):
@@ -90,8 +91,9 @@ class ModelTraining:
         print(model_name, " Training Success!")
         return log_row
 
+
 if __name__ == '__main__':
-    route_list = RouteList().route_list
+    route_list = RouteList( ).route_list
     route_list = ["route_" + route + "__.pkl" for route in route_list]
     print(route_list)
 
@@ -100,5 +102,5 @@ if __name__ == '__main__':
         print(route_path)
         # if os.path.isfile('./' + route_path.split(".")[0] + 'lgbm_model.pkl'):
         #     continue
-        log = log.append(ModelTraining().train(route_path), ignore_index=True)
+        log = log.append(ModelTraining( ).train(route_path), ignore_index=True)
         log.to_csv("training_log.csv", index=False)

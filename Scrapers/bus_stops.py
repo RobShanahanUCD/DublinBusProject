@@ -1,6 +1,6 @@
-import pandas as pd
 import json
-from pandas.io.json import json_normalize 
+
+import pandas as pd
 
 with open('bus_stops.json', encoding='cp850') as f:
     data = json.load(f)
@@ -15,16 +15,9 @@ for i in range(0, len(results)):
         
         for k in range(0, len(results[i]['operators'][j]['routes'])):
             
-            n = []
-            n.append(results[i]['stopid'])
-            n.append(results[i]['displaystopid'])
-            n.append(results[i]['shortname'])
-            n.append(results[i]['fullname'])
-            n.append(results[i]['latitude'])
-            n.append(results[i]['longitude'])
-            n.append(results[i]['operators'][j]['name'])
-            n.append(results[i]['operators'][j]['operatortype'])
-            n.append(results[i]['operators'][j]['routes'][k])
+            n = [results[i]['stopid'], results[i]['displaystopid'], results[i]['shortname'], results[i]['fullname'],
+                 results[i]['latitude'], results[i]['longitude'], results[i]['operators'][j]['name'],
+                 results[i]['operators'][j]['operatortype'], results[i]['operators'][j]['routes'][k]]
             l.append(n)
 
 
