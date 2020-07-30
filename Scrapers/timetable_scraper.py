@@ -21,6 +21,7 @@ data = bs(data.text, 'html.parser')
 routes = data.find_all('a', {'title': 'Read more'})
 
 for route in routes:
+    # noinspection PyBroadException
     try:
         
         innerHTML = route.get_text().strip()

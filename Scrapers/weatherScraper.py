@@ -1,7 +1,7 @@
-import requests, json, datetime, time
-from datetime import datetime
+import json
 import pymysql
-import os
+import requests
+import time
 
 try:
     # connects to database
@@ -57,6 +57,7 @@ try:
 
 
     # checks for duplicate row on database and if it is then it skips
+    # noinspection PyBroadException
     try:
         # pushes data to SQL table on database
         cursor.execute(

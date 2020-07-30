@@ -1,8 +1,5 @@
-from sqlalchemy import create_engine
 import pandas as pd
-import joblib
-import json
-
+from sqlalchemy import create_engine
 
 host = 'dublinbus.cegwluuehipg.eu-west-1.rds.amazonaws.com'
 username = 'admin'

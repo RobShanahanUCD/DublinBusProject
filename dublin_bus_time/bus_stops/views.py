@@ -131,7 +131,7 @@ class Journey(APIView):
         x_input_df = ml.ModelTraining( ).time_transform(x_input_df, 'day_of_week', 7)
         x_input_df = ml.ModelTraining( ).time_transform(x_input_df, 'hour', 24)
         x_input_df['StopPointID'] = x_input_df['StopPointID'].astype('category')
-        
+
         path = 'route_' + route + '__lgbm_model.pkl'
         model_path = os.path.join(PredictionConfig.MODELS_FOLDER, path)
         ml_model = joblib.load(model_path)

@@ -1,7 +1,9 @@
-import requests, json, datetime, time
 from datetime import datetime
+
+import json
 import pymysql
-import os
+import requests
+import time
 
 try:
 	host="MY_DATABASE"
@@ -53,6 +55,7 @@ try:
 		currDateTime = now.strftime("%Y/%m/%d %H:%M:%S")
 
 		#checks for duplicate row on database and if it is then it skips
+		# noinspection PyBroadException,PyBroadException
 		try:
 			#pushes data to SQL table on database
 			cursor.execute("INSERT INTO future_weather_data (number, main, description, icon, temp, tempMin, tempMax, tempFeels, humidity, pressure, windSpeed, windDeg, rain, date, time, day, dateTime, epoch, currDateTime) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s, %s)",(number,main,description,icon,temp,tempMin,tempMax,tempFeels,humidity,pressure,windSpeed,windDeg,rain,dateUpdate,timeUpdate,dayUpdate,dateTime,epoch,currDateTime))

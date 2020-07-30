@@ -17,6 +17,7 @@ class Journey(models.Model):
 
 
 class BusStops(models.Model):
+    objects = None
     stopid = models.IntegerField(primary_key=True)
     stopname = models.CharField(max_length=60, blank=True, null=True)
     route = models.CharField(max_length=12)
@@ -58,6 +59,7 @@ class FutureWeatherData(models.Model):
 
 
 class LiveWeatherData(models.Model):
+    objects = None
     number = models.IntegerField(blank=True, null=True)
     main = models.CharField(max_length=45, blank=True, null=True)
     description = models.CharField(max_length=45, blank=True, null=True)

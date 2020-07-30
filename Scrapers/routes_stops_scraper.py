@@ -19,6 +19,7 @@ stops = cursor.fetchall()
 stops = [list(i) for i in stops]
 stops
 for stop in stops:
+    # noinspection PyBroadException,PyBroadException
     try:
         data = requests.get('https://www.dublinbus.ie/RTPI/Sources-of-Real-Time-Information/?searchtype=view&searchquery=' + str(stop[0]))
         data = bs(data.text, 'html.parser')
