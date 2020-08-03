@@ -42,9 +42,13 @@ class Journey(APIView):
         data = request.data
 
         # Get temp data from live weather database
-        queryset = LiveWeatherData.objects.order_by('-datetime').values( )[0]
-
+        queryset = LiveWeatherData.objects.order_by('-datetime').values()[0]
         temp = queryset['temp']
+
+        predictions = {"PredicedJourneyTime": self.resolve_data(data, temp)}
+        return Response(predictions, status=status.HTTP_200_OK)
+
+    def resolve_data(self, data, temp):
         bus_journey_time = 0
         google_map_reference = 0
 
@@ -60,13 +64,13 @@ class Journey(APIView):
             except Exception as e:
                 print("Error", e)
                 bus_journey_time += step['duration']
+
         walking_time = sum(data['walking_data'])
         prediction = bus_journey_time + walking_time
         # For studying the error of our prediction to the google map
         error_rate = abs(bus_journey_time - google_map_reference) / google_map_reference
-        # print('Error rate: ', error_rate)
-        predictions = {"PredicedJourneyTime": prediction}
-        return Response(predictions, status=status.HTTP_200_OK)
+        print('Error rate: ', error_rate)
+        return prediction
 
     def stop_id_mapping(self, route, stop_name):
         """Get the stop id from route and stop name"""
@@ -110,7 +114,7 @@ class Journey(APIView):
             stop_id = str(data['name'].split('stop')[-1].strip( ))
             # print(stop_id, type(stop_id))
         else:
-            stop_name = data['name'].strip( )
+            stop_name = data['name'].strip()
             stop_id = str(self.stop_id_mapping(route, stop_name))
             # print(stop_id, type(stop_id))
 
@@ -128,12 +132,12 @@ class Journey(APIView):
         x_input_df = pd.DataFrame(x_input)
 
         # ML model data pre-processing
-        x_input_df = ml.ModelTraining( ).time_transform(x_input_df, 'day_of_week', 7)
-        x_input_df = ml.ModelTraining( ).time_transform(x_input_df, 'hour', 24)
+        x_input_df = ml.ModelTraining().time_transform(x_input_df, 'day_of_week', 7)
+        x_input_df = ml.ModelTraining().time_transform(x_input_df, 'hour', 24)
         x_input_df['StopPointID'] = x_input_df['StopPointID'].astype('category')
 
-        path = 'route_' + route + '__lgbm_model.pkl'
+        path = 'route_' + route.upper() + '__lgbm_model.pkl'
         model_path = os.path.join(PredictionConfig.MODELS_FOLDER, path)
         ml_model = joblib.load(model_path)
         y_prediction = ml_model.predict(x_input_df)
-        return y_prediction[0]
+        return int(y_prediction[0])

@@ -246,8 +246,7 @@ AutocompleteDirectionsHandler.prototype.route = function () {
             }
 
           }
-        console.log(busData);
-        console.log({'walking_data': walkingData,'bus_data': busData});
+        console.log(JSON.stringify({'walking_data': walkingData,'bus_data': busData}));
 
         axios.post("http://localhost:8000/predict/", {'walking_data': walkingData,'bus_data': busData})
         .then((res) => { console.log(res.data) })

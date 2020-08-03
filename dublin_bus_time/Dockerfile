@@ -12,10 +12,9 @@ COPY . /app/
 # update pip
 RUN pip install pip -U
 
-# copy requirements.txt to code dir
-ADD requirements.txt /app/
 # install dependency
 RUN pip install -r requirements.txt
 
+#start the django server and the PORT variable will be given by Heroku
 CMD python manage.py runserver 0.0.0.0:$PORT
 
