@@ -26,15 +26,7 @@ class TestIndexView(TestCase):
 
     def test_prediction_only_walking(self):
         """test data from the post method can successfully predict the query with the case just walking"""
-        prediction = Journey().resolve_data({"walking_data": [62, 237],
-                                              "bus_data": [{"distance": 788, "route": "65b", "duration": 135,
-                                                            "departure": {"name": "College Green, stop 4521",
-                                                                          "location": [53.3442368, -6.2602183],
-                                                                          "timestamp": 1596449076000},
-                                                            "arrival": {"name": "Whitefriars St",
-                                                                        "location": [53.3399144, -6.265696],
-                                                                        "timestamp": 1596449076000}}]}, 15)
-
+        prediction = Journey().resolve_data({"walking_data": [123], "bus_data": []}, 15)
         self.assertTrue(isinstance(prediction, int))
 
     def test_prediction_no_transfer(self):

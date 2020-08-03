@@ -39,19 +39,17 @@ class Journey(APIView):
     def post(self, request):
         """Main function for our web app. Takes in the user information from the frontend.
         Passes this information into our model to generate an estimation for the journey time."""
-        data = request.data
 
+        data = request.data
+        print(data)
         # Get temp data from live weather database
         queryset = LiveWeatherData.objects.order_by('-datetime').values()[0]
         temp = queryset['temp']
-        # predictions = {"PredicedJourneyTime": self.resolve_data(data, temp)}
-        return Response(0, status=status.HTTP_200_OK)
-
+        predictions = {"PredicedJourneyTime": self.resolve_data(data, temp)}
+        return Response({"PredicedJourneyTime": predictions}, status=status.HTTP_200_OK)
 
     def resolve_data(self, data, temp):
-        print("====")
-        if len(data['bus_data']) == 0:
-            return data['walking_data']
+
         bus_journey_time = 0
         google_map_reference = 0
 

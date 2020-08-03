@@ -218,7 +218,7 @@ AutocompleteDirectionsHandler.prototype.route = function () {
         var walkingData = [];
 
         var responseData = response.routes[0].legs[0].steps;
-        console.log(responseData);
+//        console.log(responseData);
         for (let i = 0; i < responseData.length; i++) {
             if  (responseData[i]['travel_mode'] === "TRANSIT") {
                 var busStep = {
@@ -246,9 +246,9 @@ AutocompleteDirectionsHandler.prototype.route = function () {
             }
 
           }
-        console.log(JSON.stringify({'walking_data': walkingData,'bus_data': busData}));
-
-        axios.post("http://localhost:8000/predict/", {'walking_data': walkingData,'bus_data': busData})
+        console.log({'walking_data': walkingData, "bus_data": busData});
+        console.log(JSON.stringify({'walking_data': walkingData, "bus_data": busData}));
+        axios.post("http://localhost:8000/predict/", {'walking_data': walkingData, "bus_data": busData})
         .then((res) => { console.log(res.data) })
         .catch((error) => { console.log(error) })
       } else {
