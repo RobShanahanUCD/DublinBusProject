@@ -11,7 +11,7 @@ class TestIndexView(TestCase):
         found = resolve('/')
 
         # check function name is equal
-        self.assertEqual(found.func.__name__, Journey.as_view().__name__)
+        self.assertEqual(found.func.__name__, Journey.as_view( ).__name__)
 
     def test_get_index(self):
         """test the get method"""
@@ -23,6 +23,19 @@ class TestIndexView(TestCase):
 
         # check response status is equal to 200
         self.assertEqual(response.status_code, 200)
+
+    def test_prediction_only_walking(self):
+        """test data from the post method can successfully predict the query with the case just walking"""
+        prediction = Journey().resolve_data({"walking_data": [62, 237],
+                                              "bus_data": [{"distance": 788, "route": "65b", "duration": 135,
+                                                            "departure": {"name": "College Green, stop 4521",
+                                                                          "location": [53.3442368, -6.2602183],
+                                                                          "timestamp": 1596449076000},
+                                                            "arrival": {"name": "Whitefriars St",
+                                                                        "location": [53.3399144, -6.265696],
+                                                                        "timestamp": 1596449076000}}]}, 15)
+
+        self.assertTrue(isinstance(prediction, int))
 
     def test_prediction_no_transfer(self):
         """test data from the post method can successfully predict the query without transfer"""
@@ -60,7 +73,7 @@ class TestIndexView(TestCase):
 
     def test_prediction(self):
         """test the function can call the corresponding ml model to predict to journey"""
-        prediction = Journey().journey_predict({"name": "Eden Quay, stop 299",
+        prediction = Journey( ).journey_predict({"name": "Eden Quay, stop 299",
                                                  "location": [53.3482354, -6.2561569],
                                                  "timestamp": 1596435870000}, "15", 1, 15)
         self.assertTrue(isinstance(prediction, int))

@@ -44,32 +44,36 @@ class Journey(APIView):
         # Get temp data from live weather database
         queryset = LiveWeatherData.objects.order_by('-datetime').values()[0]
         temp = queryset['temp']
+        # predictions = {"PredicedJourneyTime": self.resolve_data(data, temp)}
+        return Response(0, status=status.HTTP_200_OK)
 
-        predictions = {"PredicedJourneyTime": self.resolve_data(data, temp)}
-        return Response(predictions, status=status.HTTP_200_OK)
 
     def resolve_data(self, data, temp):
+        print("====")
+        if len(data['bus_data']) == 0:
+            return data['walking_data']
         bus_journey_time = 0
         google_map_reference = 0
 
         # Predict all the segment of bus trip
-        for step in data['bus_data']:
-            google_map_reference += step['duration']
-            try:
-                direction = self.get_direction(step['arrival']['location'], step['departure']['location'])
-                bus_journey_time += abs((self.journey_predict(step['arrival'], step['route'], direction, temp) -
-                                         self.journey_predict(step['departure'], step['route'], direction, temp)))
+        if len(data['bus_data']) > 0:
+            for step in data['bus_data']:
+                google_map_reference += step['duration']
+                try:
+                    direction = self.get_direction(step['arrival']['location'], step['departure']['location'])
+                    bus_journey_time += abs((self.journey_predict(step['arrival'], step['route'], direction, temp) -
+                                             self.journey_predict(step['departure'], step['route'], direction, temp)))
 
-            # If prediction fails, use the prediction from google map
-            except Exception as e:
-                print("Error", e)
-                bus_journey_time += step['duration']
+                # If prediction fails, use the prediction from google map
+                except Exception as e:
+                    print("Error", e)
+                    bus_journey_time += step['duration']
 
         walking_time = sum(data['walking_data'])
         prediction = bus_journey_time + walking_time
         # For studying the error of our prediction to the google map
-        error_rate = abs(bus_journey_time - google_map_reference) / google_map_reference
-        print('Error rate: ', error_rate)
+        # error_rate = abs(bus_journey_time - google_map_reference) / google_map_reference
+        # print('Error rate: ', error_rate)
         return prediction
 
     def stop_id_mapping(self, route, stop_name):
