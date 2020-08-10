@@ -100,23 +100,23 @@ function centerUser(controlDiv, map) {
   });
 }
 
-// Directions Infomation Box
-function directionsInfo(controlDiv, map) {
+// Travel-Time Infomation Box
+function travelTimeInfo(controlDiv, map, travelTimeVal) {
   // Set CSS for the control border.
   var controlUI = document.createElement("div");
   controlUI.style.backgroundColor = "#fff";
   controlUI.style.border = "2px solid #fff";
   controlUI.style.borderRadius = "2px";
   controlUI.style.boxShadow = "0 2px 6px rgba(0,0,0,.3)";
-  controlUI.style.cursor = "pointer";
-  controlUI.style.height = "100px";
+  controlUI.style.height = "25px";
   controlUI.style.width = "260px";
   controlUI.style.marginTop = "10px";
   controlUI.style.marginLeft = "10px";
   controlUI.style.alignContent = "space-around";
-  controlUI.title = "Directions Information";
   controlUI.innerHTML =
-    "<h6 style='text-align: center; border-bottom: 1px solid black;'><b>Directions</b></h6>";
+    "<h6 style='text-align: center;'><b>Travel-Time: " +
+    travelTimeVal +
+    " minutes</b></h6>";
   controlDiv.appendChild(controlUI);
 }
 
@@ -196,19 +196,6 @@ function AutocompleteDirectionsHandler(map) {
   destinationInput.style.marginLeft = "10px";
   destinationInput.style.alignContent = "space-around";
 
-  // var directionsGo = document.getElementById("directionsButton");
-  // directionsGo.style.backgroundColor = "green";
-  // directionsGo.style.color = "white";
-  // directionsGo.style.border = "2px solid green";
-  // directionsGo.style.borderRadius = "2px";
-  // directionsGo.style.boxShadow = "0 2px 6px rgba(0,0,0,.3)";
-  // directionsGo.style.cursor = "pointer";
-  // directionsGo.style.height = "20px";
-  // directionsGo.style.width = "75px";
-  // directionsGo.style.marginTop = "10px";
-  // directionsGo.style.marginLeft = "10px";
-  // directionsGo.style.alignContent = "space-around";
-
   var originAutocomplete = new google.maps.places.Autocomplete(originInput);
   //Specify just the place data fields needed
   originAutocomplete.setFields(["place_id"]);
@@ -226,7 +213,6 @@ function AutocompleteDirectionsHandler(map) {
   this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(
     destinationInput
   );
-  // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(directionsGo);
 }
 
 AutocompleteDirectionsHandler.prototype.setupPlaceChangedListener = function (
@@ -274,7 +260,6 @@ AutocompleteDirectionsHandler.prototype.route = function () {
         var walkingData = [];
 
         var responseData = response.routes[0].legs[0].steps;
-        //        console.log(responseData);
         for (let i = 0; i < responseData.length; i++) {
           if (responseData[i]["travel_mode"] === "TRANSIT") {
             var busStep = {
@@ -321,29 +306,34 @@ AutocompleteDirectionsHandler.prototype.route = function () {
             bus_data: busData,
           })
           .then((res) => {
-            console.log(res.data);
+            var journeyTime = JSON.stringify(
+              res.data.PredicedJourneyTime.PredicedJourneyTime
+            );
+            journeyTime = Math.round(journeyTime / 60);
+            showTravelTime(journeyTime);
+            // alert("Estimated Travel-Time: " + journeyTime + " minutes");
+            // console.log(res.data);
           })
           .catch((error) => {
             console.log(error);
           });
-
-        // Create information box for directions
-        var directionsInformationDiv = document.createElement("div");
-        var directionsInformation = new directionsInfo(
-          directionsInformationDiv,
-          map
-        );
-
-        directionsInformationDiv.index = 1;
-        map.controls[google.maps.ControlPosition.LEFT_TOP].push(
-          directionsInformationDiv
-        );
       } else {
         window.alert("Directions request failed due to " + status);
       }
     }
   );
 };
+
+function showTravelTime(data) {
+  // Create information box for travel time
+  var travelTimeDiv = null;
+  travelTimeDiv = document.createElement("div");
+  var travelTime = travelTimeInfo(travelTimeDiv, map, data);
+  // alert("Estimated Travel-Time: " + data + " minutes");
+
+  travelTimeDiv.index = 1;
+  map.controls[google.maps.ControlPosition.LEFT_TOP].push(travelTimeDiv);
+}
 
 // // Toggle the menu
 // function toggleMenu() {
