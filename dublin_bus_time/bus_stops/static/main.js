@@ -249,7 +249,7 @@ AutocompleteDirectionsHandler.prototype.route = function () {
         console.log({'walking_data': walkingData, "bus_data": busData});
         console.log(JSON.stringify({'walking_data': walkingData, "bus_data": busData}));
         axios.post("http://localhost:8000/predict/", {'walking_data': walkingData, "bus_data": busData})
-        .then((res) => { console.log(res.data) })
+        .then((res) => { alert(JSON.stringify(res.data.PredictedJourneyTime["PredictedJourneyTime"])) })
         .catch((error) => { console.log(error) })
       } else {
         window.alert("Directions request failed due to " + status);

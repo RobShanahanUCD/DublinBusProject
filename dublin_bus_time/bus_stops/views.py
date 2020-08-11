@@ -41,12 +41,11 @@ class Journey(APIView):
         Passes this information into our model to generate an estimation for the journey time."""
 
         data = request.data
-        print(data)
         # Get temp data from live weather database
         queryset = LiveWeatherData.objects.order_by('-datetime').values()[0]
         temp = queryset['temp']
-        predictions = {"PredicedJourneyTime": self.resolve_data(data, temp)}
-        return Response({"PredicedJourneyTime": predictions}, status=status.HTTP_200_OK)
+        predictions = {"PredictedJourneyTime": self.resolve_data(data, temp)}
+        return Response({"PredictedJourneyTime": predictions}, status=status.HTTP_200_OK)
 
     def resolve_data(self, data, temp):
 
