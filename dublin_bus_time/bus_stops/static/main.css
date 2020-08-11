@@ -1,15 +1,35 @@
+* {
+  box-sizing: border-box;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Roboto", "sans-serif";
+}
+
+body,
+html {
+  height: 100%;
+  line-height: 1.8;
+}
+
 /* Navbar styling */
-.menuBar {
+/* .menuBar {
   overflow: hidden;
   background-color: #000000;
   position: relative;
 }
 
-.menuBar #accordionExample {
+.menuBar #accordionMenu {
   display: none;
   position: fixed;
-  height: 92vh;
-  width: 100vw;
+  height: 100%;
+  width: 400px;
   z-index: 1;
   border-top: 2px solid yellow;
   background-color: #000000;
@@ -30,12 +50,13 @@
   top: 0;
 }
 
-#map {
-  height: 92vh;
-  max-width: none;
-}
-
 .card-body {
   height: 310px;
   padding: 0;
+} */
+
+#map {
+  margin-top: 62px;
+  height: 92vh;
+  max-width: none;
 }
