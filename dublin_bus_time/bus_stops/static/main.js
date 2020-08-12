@@ -99,6 +99,26 @@ function centerUser(controlDiv, map) {
   });
 }
 
+// Travel-Time Infomation Box
+function travelTimeInfo(controlDiv, map, travelTimeVal) {
+  // Set CSS for the control border.
+  var controlUI = document.createElement("div");
+  controlUI.style.backgroundColor = "#fff";
+  controlUI.style.border = "2px solid #fff";
+  controlUI.style.borderRadius = "2px";
+  controlUI.style.boxShadow = "0 2px 6px rgba(0,0,0,.3)";
+  controlUI.style.height = "25px";
+  controlUI.style.width = "260px";
+  controlUI.style.marginTop = "10px";
+  controlUI.style.marginLeft = "10px";
+  controlUI.style.alignContent = "space-around";
+  controlUI.innerHTML =
+    "<h6 style='text-align: center;'><b>Travel-Time: " +
+    travelTimeVal +
+    " minutes</b></h6>";
+  controlDiv.appendChild(controlUI);
+}
+
 // Initialize and add the map
 function initMap() {
   // Centre the map at Dublin
@@ -150,9 +170,33 @@ function AutocompleteDirectionsHandler(map) {
   this.directionsService = new google.maps.DirectionsService();
   this.directionsRenderer = new google.maps.DirectionsRenderer();
   this.directionsRenderer.setMap(map);
+  this.directionsRenderer.setPanel(
+    document.getElementById("detailedDirections")
+  );
 
   var originInput = document.getElementById("origin");
+  originInput.style.backgroundColor = "#fff";
+  originInput.style.border = "2px solid #fff";
+  originInput.style.borderRadius = "2px";
+  originInput.style.boxShadow = "0 2px 6px rgba(0,0,0,.3)";
+  originInput.style.cursor = "pointer";
+  originInput.style.height = "20px";
+  originInput.style.width = "125px";
+  originInput.style.marginTop = "10px";
+  originInput.style.marginLeft = "10px";
+  originInput.style.alignContent = "space-around";
+
   var destinationInput = document.getElementById("destination");
+  destinationInput.style.backgroundColor = "#fff";
+  destinationInput.style.border = "2px solid #fff";
+  destinationInput.style.borderRadius = "2px";
+  destinationInput.style.boxShadow = "0 2px 6px rgba(0,0,0,.3)";
+  destinationInput.style.cursor = "pointer";
+  destinationInput.style.height = "20px";
+  destinationInput.style.width = "125px";
+  destinationInput.style.marginTop = "10px";
+  destinationInput.style.marginLeft = "10px";
+  destinationInput.style.alignContent = "space-around";
 
   var originAutocomplete = new google.maps.places.Autocomplete(originInput);
   //Specify just the place data fields needed
@@ -218,39 +262,61 @@ AutocompleteDirectionsHandler.prototype.route = function () {
         var walkingData = [];
 
         var responseData = response.routes[0].legs[0].steps;
-//        console.log(responseData);
         for (let i = 0; i < responseData.length; i++) {
-            if  (responseData[i]['travel_mode'] === "TRANSIT") {
-                var busStep = {
-                  'distance' : responseData[i]['distance']['value'],
-                  'route': responseData[i]['transit']['line']['short_name'],
-                  'duration': responseData[i]['duration']['value'],
-                  'departure' :{              
-                  'name': responseData[i]['transit']['departure_stop']['name'],
-                  'location': [responseData[i]['transit']['departure_stop']['location'].lat(),
-                                              responseData[i]['transit']['departure_stop']['location'].lng()],
-                  'timestamp': responseData[i]['transit']['arrival_time']['value'].valueOf()
-                                },
-                  'arrival':{
-                  'name': responseData[i]['transit']['arrival_stop']['name'],
-                  'location': [responseData[i]['transit']['arrival_stop']['location'].lat(),
-                                              responseData[i]['transit']['arrival_stop']['location'].lng()],
-                  'timestamp': responseData[i]['transit']['arrival_time']['value'].valueOf()
-                                }
-              };
-                busData.push(busStep);
-            }
-
-            else if (responseData[i]['travel_mode'] === "WALKING") {
-              walkingData.push(responseData[i]['duration']['value']);
-            }
-
+          if (responseData[i]["travel_mode"] === "TRANSIT") {
+            var busStep = {
+              distance: responseData[i]["distance"]["value"],
+              route: responseData[i]["transit"]["line"]["short_name"],
+              duration: responseData[i]["duration"]["value"],
+              departure: {
+                name: responseData[i]["transit"]["departure_stop"]["name"],
+                location: [
+                  responseData[i]["transit"]["departure_stop"][
+                    "location"
+                  ].lat(),
+                  responseData[i]["transit"]["departure_stop"][
+                    "location"
+                  ].lng(),
+                ],
+                timestamp: responseData[i]["transit"]["arrival_time"][
+                  "value"
+                ].valueOf(),
+              },
+              arrival: {
+                name: responseData[i]["transit"]["arrival_stop"]["name"],
+                location: [
+                  responseData[i]["transit"]["arrival_stop"]["location"].lat(),
+                  responseData[i]["transit"]["arrival_stop"]["location"].lng(),
+                ],
+                timestamp: responseData[i]["transit"]["arrival_time"][
+                  "value"
+                ].valueOf(),
+              },
+            };
+            busData.push(busStep);
+          } else if (responseData[i]["travel_mode"] === "WALKING") {
+            walkingData.push(responseData[i]["duration"]["value"]);
           }
-        console.log({'walking_data': walkingData, "bus_data": busData});
-        console.log(JSON.stringify({'walking_data': walkingData, "bus_data": busData}));
-        axios.post("http://localhost:8000/predict/", {'walking_data': walkingData, "bus_data": busData})
-        .then((res) => { console.log(res.data) })
-        .catch((error) => { console.log(error) })
+        }
+        console.log({ walking_data: walkingData, bus_data: busData });
+        console.log(
+          JSON.stringify({ walking_data: walkingData, bus_data: busData })
+        );
+        axios
+          .post("http://localhost:8000/predict/", {
+            walking_data: walkingData,
+            bus_data: busData,
+          })
+          .then((res) => {
+            var journeyTime = JSON.stringify(
+              res.data.PredicedJourneyTime.PredicedJourneyTime
+            );
+            journeyTime = Math.round(journeyTime / 60);
+            showTravelTime(journeyTime);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       } else {
         window.alert("Directions request failed due to " + status);
       }
@@ -258,12 +324,26 @@ AutocompleteDirectionsHandler.prototype.route = function () {
   );
 };
 
-// Toggle the menu
-function toggleMenu() {
-  var x = document.getElementById("accordionExample");
+function showTravelTime(data) {
+  // Create information box for travel time
+  travelTimeDiv = document.createElement("div");
+  var travelTime = travelTimeInfo(travelTimeDiv, map, data);
+
+  travelTimeDiv.index = 1;
+  map.controls[google.maps.ControlPosition.LEFT_TOP].push(travelTimeDiv);
+
+  var details = document.getElementById("details");
+  map.controls[google.maps.ControlPosition.LEFT_TOP].push(details);
+
+  document.getElementById("details").style.display = "block";
+}
+
+function showDirections() {
+  var x = document.getElementById("detailedDirections");
   if (x.style.display === "block") {
     x.style.display = "none";
   } else {
     x.style.display = "block";
   }
 }
+
