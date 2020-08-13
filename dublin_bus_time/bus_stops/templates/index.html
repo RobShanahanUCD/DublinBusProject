@@ -1,101 +1,258 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+    />
+    <!-- Google Fonts -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+    />
+    <!-- Bootstrap core CSS -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Material Design Bootstrap -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/css/mdb.min.css"
+      rel="stylesheet"
+    />
 
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" />
-  <!-- Google Fonts -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
-  <!-- Bootstrap core CSS -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet" />
-  <!-- Material Design Bootstrap -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/css/mdb.min.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}" />
 
-  <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}" />
+    <!-- Load an icon library to show a hamburger menu (bars) on small screens -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
 
-  <!-- Load an icon library to show a hamburger menu (bars) on small screens -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <title>Dublin Bus</title>
 
-  <title>Dublin Bus</title>
-
-  <script src="{% static 'main.js' %}"></script>
-  <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAimMRfnPyCy_qC68B4ce2B65bNqrpMgO0&libraries=places&callback=initMap"></script>
-  <!--add favicon-->
-  <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
-</head>
-
-<body>
-  <nav class="navbar fixed-top navbar-expand-md navbar-light bg-warning">
-    <a class="navbar-brand" href="/">Dublin Bus</a>
-    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarCollapse">
-      <div class="navbar-nav ml-auto">
-        <a href="#TwitterFeed" class="nav-item nav-link">Twitter Feed</a>
-        <a href="#Weather" class="nav-item nav-link">Weather</a>
-        <a href="#RealTime" class="nav-item nav-link">Timetables</a>
-      </div>
-    </div>
-  </nav>
-
-  <div id="detailedDirections"></div>
-
-  <div id="map"></div>
-
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-12 col-md-8" id="TwitterFeed">
-        <h3 class="text-center p-3 border bg-warning">Twitter Feed</h3>
-        <a class="twitter-timeline bg-warning" data-height="300" data-width="1200" data-theme="light"
-          href="https://twitter.com/dublinbusnews?ref_src=twsrc%5Etfw">Tweets by dublinbusnews</a>
-        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-      </div>
-      <div class="col-12 col-md-4" id="Weather">
-        <h3 class="text-center p-3 border bg-warning">Weather</h3>
-
-        <div class="weatherContainer">
-          <div class="location border-bottom"></div>
-          <div class="weatherIcon">
-            <img src="static/icons/unknown.png" alt="" />
+    <script src="{% static 'main.js' %}"></script>
+    <script
+      async
+      defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAimMRfnPyCy_qC68B4ce2B65bNqrpMgO0&libraries=places&callback=initMap"
+    ></script>
+    <!--add favicon-->
+    <link
+      rel="shortcut icon"
+      type="image/png"
+      href="{% static 'favicon.ico' %}"
+    />
+  </head>
+  <body>
+    <!-- <div id="main">
+      <div class="menuBar">
+        <a class="navbar-brand mr-4" href="/" style="color: yellow;">
+          Dublin Bus
+        </a>
+        <a href="javascript:void(0)" class="icon" onclick="toggleMenu()">
+          <i class="fa fa-bars" style="margin-left: auto;"></i>
+        </a> -->
+    <!-- Accordion menu - MDBootstrap -->
+    <!-- <div class="accordion" id="accordionMenu">
+          <div class="card z-depth-0 bordered">
+            <div class="card-header" id="headingOne">
+              <h4 class="mb-0">
+                <button
+                  class="btn btn-link"
+                  type="button"
+                  data-toggle="collapse"
+                  data-target="#collapseOne"
+                  aria-expanded="true"
+                  aria-controls="collapseOne"
+                >
+                  Twitter Feed
+                </button>
+              </h4>
+            </div>
+            <div
+              id="collapseOne"
+              class="collapse show"
+              aria-labelledby="headingOne"
+              data-parent="#accordionMenu"
+            >
+              <div class="card-body">
+                <a
+                  class="twitter-timeline"
+                  data-height="300"
+                  data-width="1200"
+                  data-theme="light"
+                  href="https://twitter.com/dublinbusnews?ref_src=twsrc%5Etfw"
+                  >Tweets by dublinbusnews</a
+                >
+                <script
+                  async
+                  src="https://platform.twitter.com/widgets.js"
+                  charset="utf-8"
+                ></script>
+              </div>
+            </div>
           </div>
-          <div class="temperature">
-            <p>- °<span>C</span></p>
+          <div class="card z-depth-0 bordered">
+            <div class="card-header" id="headingTwo">
+              <h4 class="mb-0">
+                <button
+                  class="btn btn-link collapsed"
+                  type="button"
+                  data-toggle="collapse"
+                  data-target="#collapseTwo"
+                  aria-expanded="false"
+                  aria-controls="collapseTwo"
+                >
+                  Bus Timetable
+                </button>
+              </h4>
+            </div>
+            <div
+              id="collapseTwo"
+              class="collapse"
+              aria-labelledby="headingTwo"
+              data-parent="#accordionMenu"
+            >
+              <div class="card-body">
+                Timetables placeholder
+              </div>
+            </div>
           </div>
-          <div class="description">
-            <p>-</p>
+          <div class="card z-depth-0 bordered">
+            <div class="card-header" id="headingThree">
+              <h4 class="mb-0">
+                <button
+                  class="btn btn-link collapsed"
+                  type="button"
+                  data-toggle="collapse"
+                  data-target="#collapseThree"
+                  aria-expanded="false"
+                  aria-controls="collapseThree"
+                >
+                  Weather
+                </button>
+              </h4>
+            </div>
+            <div
+              id="collapseThree"
+              class="collapse"
+              aria-labelledby="headingThree"
+              data-parent="#accordionMenu"
+            >
+              <div class="card-body">
+                <div>
+                  <img
+                    id="weatherIcon"
+                    src=""
+                    alt=""
+                    style="height: 90px; width: 100px;"
+                  />
+                </div>
+                <div>
+                  <span id="description"></span>
+                </div>
+                <div>
+                  <div id="temp"></div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+    </div> -->
+
+    <nav class="navbar fixed-top navbar-expand-md navbar-light bg-light">
+      <a class="navbar-brand" href="/">Dublin Bus</a>
+      <button
+        type="button"
+        class="navbar-toggler"
+        data-toggle="collapse"
+        data-target="#navbarCollapse"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div class="navbar-nav ml-auto">
+          <a href="#TwitterFeed" class="nav-item nav-link">Twitter Feed</a>
+          <a href="#Weather" class="nav-item nav-link">Weather</a>
+          <a href="#RealTime" class="nav-item nav-link">Timetables</a>
+        </div>
+      </div>
+    </nav>
+
+    <div id="map"></div>
+
+    <div class="container col-9" id="TwitterFeed">
+      <h3 class="text-center p-3 border-bottom">Twitter Feed</h3>
+      <a
+        class="twitter-timeline"
+        data-height="300"
+        data-width="1200"
+        data-theme="light"
+        href="https://twitter.com/dublinbusnews?ref_src=twsrc%5Etfw"
+        >Tweets by dublinbusnews</a
+      >
+      <script
+        async
+        src="https://platform.twitter.com/widgets.js"
+        charset="utf-8"
+      ></script>
     </div>
-  </div>
 
-  <input id="origin" type="text" class="controls" placeholder="Origin" />
-  <input id="destination" type="text" class="controls" placeholder="Destination" />
-  <button id="details" type="button" class="btn btn-warning btn-sm" style="color: black; width: 260px;"
-    onclick="showDirections()">
-    Detailed Directions
-  </button>
+    <input id="origin" type="text" class="controls" placeholder="Origin" />
+    <input
+      id="destination"
+      type="text"
+      class="controls"
+      placeholder="Destination"
+    />
 
-  <script src="{% static 'weather.js' %}"></script>
-  <!--import axios-->
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-  <!-- JQuery -->
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <!-- Bootstrap tooltips -->
-  <script type="text/javascript"
-    src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
-  <!-- Bootstrap core JavaScript -->
-  <script type="text/javascript"
-    src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.min.js"></script>
-  <!-- MDB core JavaScript -->
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/js/mdb.min.js"></script>
-</body>
+    <div class="container col-3" id="Weather">
+      <h3 class="text-center p-3 border-bottom">Weather</h3>
+      <div>
+        <img
+          id="weatherIcon"
+          src=""
+          alt=""
+          style="height: 90px; width: 100px;"
+        />
+      </div>
+      <div>
+        <span id="description"></span>
+      </div>
+      <div>
+        <div id="temp"></div>
+      </div>
+    </div>
 
+    <!--import axios-->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- JQuery -->
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+    ></script>
+    <!--     Bootstrap tooltips -->
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"
+    ></script>
+    <!-- Bootstrap core JavaScript -->
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.min.js"
+    ></script>
+    <!-- MDB core JavaScript -->
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/js/mdb.min.js"
+    ></script>
+  </body>
 </html>
