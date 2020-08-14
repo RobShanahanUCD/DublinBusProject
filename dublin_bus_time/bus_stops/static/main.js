@@ -5,7 +5,6 @@ var dublin = {
   lng: -6.2603,
 };
 var infoWindow = null;
-var cityID = 7778677;
 
 // Centre map on Dublin
 function centerDublin(controlDiv, map) {
@@ -171,6 +170,9 @@ function AutocompleteDirectionsHandler(map) {
   this.directionsService = new google.maps.DirectionsService();
   this.directionsRenderer = new google.maps.DirectionsRenderer();
   this.directionsRenderer.setMap(map);
+  this.directionsRenderer.setPanel(
+    document.getElementById("detailedDirections")
+  );
 
   var originInput = document.getElementById("origin");
   originInput.style.backgroundColor = "#fff";
@@ -311,8 +313,6 @@ AutocompleteDirectionsHandler.prototype.route = function () {
             );
             journeyTime = Math.round(journeyTime / 60);
             showTravelTime(journeyTime);
-            // alert("Estimated Travel-Time: " + journeyTime + " minutes");
-            // console.log(res.data);
           })
           .catch((error) => {
             console.log(error);
@@ -326,56 +326,24 @@ AutocompleteDirectionsHandler.prototype.route = function () {
 
 function showTravelTime(data) {
   // Create information box for travel time
-  var travelTimeDiv = null;
   travelTimeDiv = document.createElement("div");
   var travelTime = travelTimeInfo(travelTimeDiv, map, data);
-  // alert("Estimated Travel-Time: " + data + " minutes");
 
   travelTimeDiv.index = 1;
   map.controls[google.maps.ControlPosition.LEFT_TOP].push(travelTimeDiv);
+
+  var details = document.getElementById("details");
+  map.controls[google.maps.ControlPosition.LEFT_TOP].push(details);
+
+  document.getElementById("details").style.display = "block";
 }
 
-// // Toggle the menu
-// function toggleMenu() {
-//   var x = document.getElementById("accordionMenu");
-//   if (x.style.display === "block") {
-//     x.style.display = "none";
-//   } else {
-//     x.style.display = "block";
-//   }
-// }
-
-// Pull weather data from OpenWeatherMap API and display information on page
-function weatherBalloon(cityID) {
-  fetch(
-    "https://api.openweathermap.org/data/2.5/weather?id=" +
-      cityID +
-      "&appid=b14191b52752bb618f8a512e1f0752b2"
-  )
-    .then(function (resp) {
-      return resp.json();
-    }) // Convert data to json
-    .then(function (data) {
-      drawWeather(data);
-    })
-    .catch(function () {
-      // catch any errors
-    });
+function showDirections() {
+  var x = document.getElementById("detailedDirections");
+  if (x.style.display === "block") {
+    x.style.display = "none";
+  } else {
+    x.style.display = "block";
+  }
 }
 
-function drawWeather(d) {
-  var celcius = Math.round(parseFloat(d.main.temp) - 273.15);
-  var iconCode = d.weather[0].icon;
-  var iconURL = "http://openweathermap.org/img/wn/" + iconCode + "@2x.png";
-  $("#weatherIcon").attr("src", iconURL);
-  // Capatilize the weather description
-  var weather_description = d.weather[0].description;
-  var formatted_description = all_Caps(weather_description);
-  document.getElementById("description").innerHTML = formatted_description;
-  document.getElementById("temp").innerHTML = celcius + "&deg;C";
-}
-
-// When page loads call on function to pull weather data from API and display on page
-window.onload = function () {
-  weatherBalloon(cityID);
-};

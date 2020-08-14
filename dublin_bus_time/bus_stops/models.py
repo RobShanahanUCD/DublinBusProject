@@ -125,3 +125,16 @@ class Routesstops(models.Model):
     class Meta:
         managed = False
         db_table = 'routesstops'
+
+
+class Timetable(models.Model):
+    timetable_id = models.IntegerField(primary_key=True)
+    route = models.CharField(max_length=45)
+    origin = models.CharField(max_length=45)
+    days = models.CharField(max_length=45)
+    time = models.CharField(max_length=45)
+
+    class Meta:
+        managed = False
+        db_table = 'timetable'
+    
