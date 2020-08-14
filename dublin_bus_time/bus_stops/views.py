@@ -158,7 +158,7 @@ class GetTimetable(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['distinct'] = Timetable.objects.values('route', 'origin').distinct('route', 'origin')
+        context['distinct'] = Timetable.objects.values('route', 'origin').distinct()
         return context
         #return {'QuerySet':QuerySet, 'distinct':distinct}
         #return render(request, "timetable.html", {'time_data': QuerySet})
