@@ -11,6 +11,9 @@ from .prog_number_hashmap import BusStopHashmap
 from .apps import PredictionConfig
 from django.shortcuts import render
 from .models import LiveWeatherData
+from .models import Timetable
+from django.views.generic import TemplateView, DetailView, ListView
+
 
 sys.path.append(os.getcwd( ))
 from .ml_models import train_model as ml
@@ -143,3 +146,23 @@ class Journey(APIView):
         ml_model = joblib.load(model_path)
         y_prediction = ml_model.predict(x_input_df)
         return int(y_prediction[0])
+
+
+class GetTimetable(ListView):
+    context_object_name = 'timetable_data'
+    template_name = 'timetable.html'
+
+    def get_queryset(self, **kwargs):
+        queryset = Timetable.objects.all()
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['distinct'] = Timetable.objects.values('route', 'origin').distinct()
+        return context
+        #return {'QuerySet':QuerySet, 'distinct':distinct}
+        #return render(request, "timetable.html", {'time_data': QuerySet})
+        
+
+
+    
