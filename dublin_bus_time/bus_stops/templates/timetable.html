@@ -61,12 +61,25 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <div class="navbar-nav ml-auto">
-          <a href="/RealTimeInformation" class="nav-item nav-link">Real Time Information</a>
         </div>
       </div>
     </nav>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    
+    <button class="button" onclick="get_timetable(1)">Opposite Direction</button>
+    
+    <select class="DDM" id="routedd" style="width:50px"></select>
+    
+    <button class="button" onclick="get_timetable(0)">Search</button>
     
     <div>
+        <div id='origin'></div>
         <div id='Mon'>Monday - Friday</div>
         <table id='tableMon'></table>
         <div id='Sat'>Saturday</div>
@@ -78,12 +91,102 @@
     <script>
         var all_data = []; 
         {% for element in object_list %};
-            all_data.push(['{{element.route}}', '{{element.origin}}', '{{element.days}}', '{{element.time}}']);
+            all_data.push([`{{element.route}}`, `{{element.origin}}`, `{{element.days}}`, `{{element.time}}`]);
         {% endfor %};
         var distinct_data = [];
-        {% for element in timetable_data %};
-            distinct_data.push(['{{element.route}}', '{{element.origin}}']);
+        {% for e in timetable_data %};
+            distinct_data.push([`{{e.route}}`, `{{e.origin}}`]);
         {% endfor %};
+        var distinct = [[distinct_data[0][0], distinct_data[0][1]]];
+        for (i=1; i < distinct_data.length; i++){
+            if (distinct_data[i][1] != distinct_data[i-1][1]){
+                distinct.push([distinct_data[i][0], distinct_data[i][1]]);
+            }
+        }
+        var routes = [];
+        routes.push(distinct_data[0][0]);
+        for (var i=1; i < distinct_data.length; i++){
+            if (distinct_data[i][0] != distinct_data[i-1][0]){
+                routes.push(distinct_data[i][0]);
+            }
+        }
+        var sel = document.getElementById('routedd');
+        for (var i = 0; i < routes.length; i++){
+            //local variable assigned to the route of each row
+            var r = routes[i];
+            //creating a new option element and assigning it to opt
+            var opt = document.createElement('option');
+            //setting the value attribute of opt to route
+            opt.value = [r];
+            //setting the inner HTML of opt to the route
+            opt.innerHTML = r;
+            //appending each option to the dropdown select tag
+            sel.appendChild(opt);
+        }
+        var origin;
+        function DisplayTimetableInfo(routeID, direction){
+            var route_origin = [];
+            for (var i=0; i < distinct.length; i++){
+                if (distinct[i][0] == routeID){
+                    route_origin.push([distinct[i][0], distinct[i][1]]);
+                }
+            }
+            if (direction == 1 && origin == route_origin[0][1]){
+                origin = route_origin[1][1];
+            }
+            else{
+                origin = route_origin[0][1];
+            }
+            document.getElementById('origin').innerHTML = 'From ' + origin;
+            var count_mon = 0;
+            var count_sat = 0;
+            var count_sun = 0;
+            var table_mon = '<tr>';
+            var table_sat = '<tr>';
+            var table_sun = '<tr>';
+            for (var i=0; i < all_data.length; i++){
+                if (all_data[i][0] == routeID && all_data[i][1] == origin && (all_data[i][2] == 'Monday-Friday' || all_data[i][2] == 'Monday - Friday' || all_data[i][2] == 'Monday -Friday' || all_data[i][2] == 'Monday- Friday')){
+                    if (count_mon % 4 == 0 && count_mon != 0){
+                        table_mon += '</tr><tr><td>' + all_data[i][3] + '</td>';    
+                    }
+                    else {
+                        table_mon += '<td>' + all_data[i][3] + '</td>';    
+                    }
+                    count_mon += 1;
+                     
+                }
+                if (all_data[i][0] == routeID && all_data[i][1] == origin && all_data[i][2] == 'Saturday'){
+                    if (count_sat % 4 == 0 && count_sat != 0){
+                        table_sat += '</tr><tr><td>' + all_data[i][3] + '</td>';    
+                    }
+                    else {
+                        table_sat += '<td>' + all_data[i][3] + '</td>';    
+                    }
+                    count_sat += 1;
+                     
+                }
+                if (all_data[i][0] == routeID && all_data[i][1] == origin && all_data[i][2] == 'Sunday'){
+                    if (count_sun % 4 == 0 && count_sun != 0){
+                        table_sun += '</tr><tr><td>' + all_data[i][3] + '</td>';    
+                    }
+                    else {
+                        table_sun += '<td>' + all_data[i][3] + '</td>';    
+                    }
+                    count_sun += 1;
+                     
+                }
+            }
+            table_mon += '</tr>';
+            table_sat += '</tr>';
+            table_sun += '</tr>';
+            document.getElementById('tableMon').innerHTML = table_mon;
+            document.getElementById('tableSat').innerHTML = table_sat;
+            document.getElementById('tableSun').innerHTML = table_sun;
+        }
+        function get_timetable(direction){
+            var value = sel.options[sel.selectedIndex].value;
+            DisplayTimetableInfo(value, direction);
+        }
         
     </script>
     
