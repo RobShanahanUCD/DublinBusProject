@@ -102,6 +102,11 @@ function centerUser(controlDiv, map) {
 // Travel-Time Infomation Box
 function travelTimeInfo(controlDiv, map, travelTimeVal) {
   // Set CSS for the control border.
+  var previousResult = document.getElementById("controlUI");
+  if (!previousResult){
+    var previousResult = document.createElement("div");
+    previousResult.style.display = "none";
+  }
   var controlUI = document.createElement("div");
   controlUI.style.backgroundColor = "#fff";
   controlUI.style.border = "2px solid #fff";
@@ -116,6 +121,8 @@ function travelTimeInfo(controlDiv, map, travelTimeVal) {
     "<h6 style='text-align: center;'><b>Travel-Time: " +
     travelTimeVal +
     " minutes</b></h6>";
+  controlUI.style.display = "block";
+  controlUI.setAttribute("id", "controlUI");
   controlDiv.appendChild(controlUI);
 }
 
@@ -303,7 +310,7 @@ AutocompleteDirectionsHandler.prototype.route = function () {
           JSON.stringify({ walking_data: walkingData, bus_data: busData })
         );
         axios
-          .post("http://localhost:8000/predict/", {
+          .post("https://9bc6a0944af3.ngrok.io/predict/", {
             walking_data: walkingData,
             bus_data: busData,
           })
@@ -326,10 +333,15 @@ AutocompleteDirectionsHandler.prototype.route = function () {
 
 function showTravelTime(data) {
   // Create information box for travel time
+  var previousResult = document.getElementById("journeyTime");
+  if (previousResult){
+    previousResult.remove();
+  }
   travelTimeDiv = document.createElement("div");
+  travelTimeDiv.setAttribute("id", "journeyTime");
   var travelTime = travelTimeInfo(travelTimeDiv, map, data);
 
-  travelTimeDiv.index = 1;
+//  travelTimeDiv.index = 1;
   map.controls[google.maps.ControlPosition.LEFT_TOP].push(travelTimeDiv);
 
   var details = document.getElementById("details");
