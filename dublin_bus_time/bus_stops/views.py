@@ -15,7 +15,7 @@ from .models import Timetable
 from django.views.generic import TemplateView, DetailView, ListView
 
 
-sys.path.append(os.getcwd( ))
+sys.path.append(os.getcwd())
 from .ml_models import train_model as ml
 
 
