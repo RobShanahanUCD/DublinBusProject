@@ -1,216 +1,251 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Font Awesome -->
-    <link
-      rel="stylesheet"
-      href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
-    />
-    <!-- Google Fonts -->
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-    />
-    <!-- Bootstrap core CSS -->
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <!-- Material Design Bootstrap -->
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/css/mdb.min.css"
-      rel="stylesheet"
-    />
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" />
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+  <!-- Bootstrap core CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Material Design Bootstrap -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/css/mdb.min.css" rel="stylesheet" />
 
-    <!-- Load an icon library to show a hamburger menu (bars) on small screens -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
+  <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}" />
 
-    <title>Dublin Bus</title>
+  <!-- Load an icon library to show a hamburger menu (bars) on small screens -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 
-    
-    <script src="{% static 'timetable.js' %}"></script>  
-      
-    <!--add favicon-->
-    <link
-      rel="shortcut icon"
-      type="image/png"
-      href="{% static 'favicon.ico' %}"
-    />
-  </head>
-  
-    {% block body %}
-    <nav class="navbar fixed-top navbar-expand-md navbar-light bg-light">
-      <a class="navbar-brand" href="/">Dublin Bus</a>
-      <button
-        type="button"
-        class="navbar-toggler"
-        data-toggle="collapse"
-        data-target="#navbarCollapse"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarCollapse">
-        <div class="navbar-nav ml-auto">
+  <title>Dublin Bus</title>
+
+
+  <script src="{% static 'timetable.js' %}"></script>
+
+  <!--add favicon-->
+  <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
+</head>
+
+{% block body %}
+<nav class="navbar fixed-top navbar-expand-md navbar-light bg-warning">
+  <a class="navbar-brand" href="/">Dublin Bus</a>
+  <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarCollapse">
+    <div class="navbar-nav ml-auto">
+      <a href="/#TwitterFeed" class="nav-item nav-link">Twitter Feed</a>
+      <a href="/#Weather" class="nav-item nav-link">Weather</a>
+      <a href="timetable" class="nav-item nav-link">Timetables</a>
+    </div>
+  </div>
+</nav>
+<br>
+<br>
+<br>
+
+
+
+
+<div class="container-fluid">
+  <div>
+    <div class="col-md-auto">
+      <h5 class="d-flex justify-content-center"><b>Bus Route:</b><span id='origin'></span>
+      </h5>
+      <div class="d-flex justify-content-center">
+        <select class="DDM" id="routedd" style="width:50px; height: 30px; margin-top: 6px;"
+          onchange="hideTables()"></select>
+        <button id="buttonTT" type="button" class="btn btn-warning btn-sm"
+          onclick="get_timetable(0); showTables()">Search</button>
+        <button id="buttonTT" type="button" class="btn btn-warning btn-sm" onclick="get_timetable(1)">Opposite
+          Direction</button>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row col-md-auto mt-2">
+    <div id='Mon' class="col-md-auto mx-auto text-center">
+      <div class="bg-warning p-1">
+        <h5>Monday - Friday</h5>
+        <div class="bg-white" style="border-radius: 0.15cm;">
+          <table id='tableMon' class="mx-auto"></table>
         </div>
       </div>
-    </nav>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    
-    <button class="button" onclick="get_timetable(1)">Opposite Direction</button>
-    
-    <select class="DDM" id="routedd" style="width:50px"></select>
-    
-    <button class="button" onclick="get_timetable(0)">Search</button>
-    
-    <div>
-        <div id='origin'></div>
-        <div id='Mon'>Monday - Friday</div>
-        <table id='tableMon'></table>
-        <div id='Sat'>Saturday</div>
-        <table id='tableSat'></table>
-        <div id='Sun'>Sunday</div>
-        <table id='tableSun'></table>
     </div>
-    
-    <script>
-        var all_data = []; 
-        {% for element in object_list %};
-            all_data.push([`{{element.route}}`, `{{element.origin}}`, `{{element.days}}`, `{{element.time}}`]);
-        {% endfor %};
-        var distinct_data = [];
-        {% for e in timetable_data %};
-            distinct_data.push([`{{e.route}}`, `{{e.origin}}`]);
-        {% endfor %};
-        var distinct = [[distinct_data[0][0], distinct_data[0][1]]];
-        for (i=1; i < distinct_data.length; i++){
-            if (distinct_data[i][1] != distinct_data[i-1][1]){
-                distinct.push([distinct_data[i][0], distinct_data[i][1]]);
-            }
+    <div id='Sat' class="col-md-auto mx-auto text-center">
+      <div class="bg-warning p-1">
+        <h5>Saturday</h5>
+        <div class="bg-white" style="border-radius: 0.15cm;">
+          <table id='tableSat' class="mx-auto"></table>
+        </div>
+      </div>
+    </div>
+    <div id='Sun' class="col-md-auto mx-auto text-center">
+      <div class="bg-warning p-1">
+        <h5>Sunday</h5>
+        <div class="bg-white" style="border-radius: 0.15cm;">
+          <table id='tableSun' class="mx-auto"></table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var all_data = [];
+  {% for element in object_list %};
+  all_data.push([`{{element.route}}`, `{{element.origin}}`, `{{element.days}}`, `{{element.time}}`]);
+  {% endfor %};
+  var distinct_data = [];
+  {% for e in timetable_data %};
+  distinct_data.push([`{{e.route}}`, `{{e.origin}}`]);
+  {% endfor %};
+  var distinct = [[distinct_data[0][0], distinct_data[0][1]]];
+  for (i = 1; i < distinct_data.length; i++) {
+    if (distinct_data[i][1] != distinct_data[i - 1][1]) {
+      distinct.push([distinct_data[i][0], distinct_data[i][1]]);
+    }
+  }
+  var routes = [];
+  routes.push(distinct_data[0][0]);
+  for (var i = 1; i < distinct_data.length; i++) {
+    if (distinct_data[i][0] != distinct_data[i - 1][0]) {
+      routes.push(distinct_data[i][0]);
+    }
+  }
+  var sel = document.getElementById('routedd');
+  for (var i = 0; i < routes.length; i++) {
+    //local variable assigned to the route of each row
+    var r = routes[i];
+    //creating a new option element and assigning it to opt
+    var opt = document.createElement('option');
+    //setting the value attribute of opt to route
+    opt.value = [r];
+    //setting the inner HTML of opt to the route
+    opt.innerHTML = r;
+    //appending each option to the dropdown select tag
+    sel.appendChild(opt);
+  }
+  var origin;
+  function DisplayTimetableInfo(routeID, direction) {
+    var route_origin = [];
+    for (var i = 0; i < distinct.length; i++) {
+      if (distinct[i][0] == routeID) {
+        route_origin.push([distinct[i][0], distinct[i][1]]);
+      }
+    }
+    if (direction == 1 && origin == route_origin[0][1]) {
+      origin = route_origin[1][1];
+    }
+    else {
+      origin = route_origin[0][1];
+    }
+    document.getElementById('origin').innerHTML = 'From ' + origin;
+    var count_mon = 0;
+    var count_sat = 0;
+    var count_sun = 0;
+    var table_mon = '<tr>';
+    var table_sat = '<tr>';
+    var table_sun = '<tr>';
+    for (var i = 0; i < all_data.length; i++) {
+      if (all_data[i][0] == routeID && all_data[i][1] == origin && (all_data[i][2] == 'Monday-Friday' || all_data[i][2] == 'Monday - Friday' || all_data[i][2] == 'Monday -Friday' || all_data[i][2] == 'Monday- Friday')) {
+        if (count_mon % 4 == 0 && count_mon != 0) {
+          table_mon += '</tr><tr><td>' + all_data[i][3] + '</td>';
         }
-        var routes = [];
-        routes.push(distinct_data[0][0]);
-        for (var i=1; i < distinct_data.length; i++){
-            if (distinct_data[i][0] != distinct_data[i-1][0]){
-                routes.push(distinct_data[i][0]);
-            }
+        else {
+          table_mon += '<td>' + all_data[i][3] + '</td>';
         }
-        var sel = document.getElementById('routedd');
-        for (var i = 0; i < routes.length; i++){
-            //local variable assigned to the route of each row
-            var r = routes[i];
-            //creating a new option element and assigning it to opt
-            var opt = document.createElement('option');
-            //setting the value attribute of opt to route
-            opt.value = [r];
-            //setting the inner HTML of opt to the route
-            opt.innerHTML = r;
-            //appending each option to the dropdown select tag
-            sel.appendChild(opt);
+        count_mon += 1;
+
+      }
+      if (all_data[i][0] == routeID && all_data[i][1] == origin && all_data[i][2] == 'Saturday') {
+        if (count_sat % 4 == 0 && count_sat != 0) {
+          table_sat += '</tr><tr><td>' + all_data[i][3] + '</td>';
         }
-        var origin;
-        function DisplayTimetableInfo(routeID, direction){
-            var route_origin = [];
-            for (var i=0; i < distinct.length; i++){
-                if (distinct[i][0] == routeID){
-                    route_origin.push([distinct[i][0], distinct[i][1]]);
-                }
-            }
-            if (direction == 1 && origin == route_origin[0][1]){
-                origin = route_origin[1][1];
-            }
-            else{
-                origin = route_origin[0][1];
-            }
-            document.getElementById('origin').innerHTML = 'From ' + origin;
-            var count_mon = 0;
-            var count_sat = 0;
-            var count_sun = 0;
-            var table_mon = '<tr>';
-            var table_sat = '<tr>';
-            var table_sun = '<tr>';
-            for (var i=0; i < all_data.length; i++){
-                if (all_data[i][0] == routeID && all_data[i][1] == origin && (all_data[i][2] == 'Monday-Friday' || all_data[i][2] == 'Monday - Friday' || all_data[i][2] == 'Monday -Friday' || all_data[i][2] == 'Monday- Friday')){
-                    if (count_mon % 4 == 0 && count_mon != 0){
-                        table_mon += '</tr><tr><td>' + all_data[i][3] + '</td>';    
-                    }
-                    else {
-                        table_mon += '<td>' + all_data[i][3] + '</td>';    
-                    }
-                    count_mon += 1;
-                     
-                }
-                if (all_data[i][0] == routeID && all_data[i][1] == origin && all_data[i][2] == 'Saturday'){
-                    if (count_sat % 4 == 0 && count_sat != 0){
-                        table_sat += '</tr><tr><td>' + all_data[i][3] + '</td>';    
-                    }
-                    else {
-                        table_sat += '<td>' + all_data[i][3] + '</td>';    
-                    }
-                    count_sat += 1;
-                     
-                }
-                if (all_data[i][0] == routeID && all_data[i][1] == origin && all_data[i][2] == 'Sunday'){
-                    if (count_sun % 4 == 0 && count_sun != 0){
-                        table_sun += '</tr><tr><td>' + all_data[i][3] + '</td>';    
-                    }
-                    else {
-                        table_sun += '<td>' + all_data[i][3] + '</td>';    
-                    }
-                    count_sun += 1;
-                     
-                }
-            }
-            table_mon += '</tr>';
-            table_sat += '</tr>';
-            table_sun += '</tr>';
-            document.getElementById('tableMon').innerHTML = table_mon;
-            document.getElementById('tableSat').innerHTML = table_sat;
-            document.getElementById('tableSun').innerHTML = table_sun;
+        else {
+          table_sat += '<td>' + all_data[i][3] + '</td>';
         }
-        function get_timetable(direction){
-            var value = sel.options[sel.selectedIndex].value;
-            DisplayTimetableInfo(value, direction);
+        count_sat += 1;
+
+      }
+      if (all_data[i][0] == routeID && all_data[i][1] == origin && all_data[i][2] == 'Sunday') {
+        if (count_sun % 4 == 0 && count_sun != 0) {
+          table_sun += '</tr><tr><td>' + all_data[i][3] + '</td>';
         }
-        
-    </script>
-    
-    <!--import axios-->
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <!-- JQuery -->
-    <script
-      type="text/javascript"
-      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
-    ></script>
-    <!--     Bootstrap tooltips -->
-    <script
-      type="text/javascript"
-      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"
-    ></script>
-    <!-- Bootstrap core JavaScript -->
-    <script
-      type="text/javascript"
-      src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.min.js"
-    ></script>
-    <!-- MDB core JavaScript -->
-    <script
-      type="text/javascript"
-      src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/js/mdb.min.js"
-    ></script>
-    {% endblock %}
+        else {
+          table_sun += '<td>' + all_data[i][3] + '</td>';
+        }
+        count_sun += 1;
+
+      }
+    }
+    table_mon += '</tr>';
+    table_sat += '</tr>';
+    table_sun += '</tr>';
+    document.getElementById('tableMon').innerHTML = table_mon;
+    document.getElementById('tableSat').innerHTML = table_sat;
+    document.getElementById('tableSun').innerHTML = table_sun;
+  }
+  function get_timetable(direction) {
+    var value = sel.options[sel.selectedIndex].value;
+
+
+    DisplayTimetableInfo(value, direction);
+  }
+
+  function showTables() {
+    var x = document.getElementById("Mon");
+    if (x.style.display === "block") {
+      x.style.display = "none";
+    } else {
+      x.style.display = "block";
+    }
+
+    var y = document.getElementById("Sat");
+    if (y.style.display === "block") {
+      y.style.display = "none";
+    } else {
+      y.style.display = "block";
+    }
+
+    var z = document.getElementById("Sun");
+    if (z.style.display === "block") {
+      z.style.display = "none";
+    } else {
+      z.style.display = "block";
+    }
+  }
+
+  function hideTables() {
+    var x = document.getElementById("Mon");
+    var y = document.getElementById("Sat");
+    var z = document.getElementById("Sun");
+
+    x.style.display = "none";
+    y.style.display = "none";
+    z.style.display = "none";
+
+
+  }
+
+</script>
+
+<!--import axios-->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<!-- JQuery -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!--     Bootstrap tooltips -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+<!-- Bootstrap core JavaScript -->
+<script type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.min.js"></script>
+<!-- MDB core JavaScript -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/js/mdb.min.js"></script>
+{% endblock %}
+
 </html>
