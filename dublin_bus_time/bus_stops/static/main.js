@@ -139,6 +139,17 @@ function initMap() {
   new AutocompleteDirectionsHandler(map);
 
   var travelTime = document.getElementById("travel");
+  travelTime.style.backgroundColor = "#fff";
+  travelTime.style.border = "2px solid #fff";
+  travelTime.style.borderRadius = "2px";
+  travelTime.style.boxShadow = "0 2px 6px rgba(0,0,0,.3)";
+  travelTime.style.height = "25px";
+  travelTime.style.width = "260px";
+  travelTime.style.textAlign = "center";
+  travelTime.style.fontSize = "18px";
+  travelTime.style.marginTop = "10px";
+  travelTime.style.marginLeft = "10px";
+  travelTime.style.alignContent = "space-around";
   map.controls[google.maps.ControlPosition.LEFT_TOP].push(travelTime);
 
   var details = document.getElementById("details");
@@ -315,17 +326,7 @@ AutocompleteDirectionsHandler.prototype.route = function () {
 function showTravelTime(data) {
   const estimate = document.querySelector("#travel");
   estimate.innerHTML = ("Travel-Time: " + data + " Minutes");
-  estimate.style.backgroundColor = "#fff";
-  estimate.style.border = "2px solid #fff";
-  estimate.style.borderRadius = "2px";
-  estimate.style.boxShadow = "0 2px 6px rgba(0,0,0,.3)";
-  estimate.style.height = "25px";
-  estimate.style.width = "260px";
-  estimate.style.textAlign = "center";
-  estimate.style.fontSize = "18px";
-  estimate.style.marginTop = "10px";
-  estimate.style.marginLeft = "10px";
-  estimate.style.alignContent = "space-around";
+
 
   document.getElementById("travel").style.display = "block";
   document.getElementById("details").style.display = "block";
