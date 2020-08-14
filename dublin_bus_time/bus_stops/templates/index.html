@@ -25,7 +25,7 @@
 
   <script src="{% static 'main.js' %}"></script>
   <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBbL3bCaqWSH_G62CR6jCsuaQ_Gc91iU3Y&libraries=places&callback=initMap"></script>
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAimMRfnPyCy_qC68B4ce2B65bNqrpMgO0&libraries=places&callback=initMap"></script>
   <!--add favicon-->
   <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
 </head>
@@ -41,7 +41,7 @@
       <div class="navbar-nav ml-auto">
         <a href="#TwitterFeed" class="nav-item nav-link">Twitter Feed</a>
         <a href="#Weather" class="nav-item nav-link">Weather</a>
-        <a href="#RealTime" class="nav-item nav-link">Timetables</a>
+        <a href="timetable" class="nav-item nav-link">Timetables</a>
       </div>
     </div>
   </nav>
@@ -88,11 +88,13 @@
   <!-- Interactive elements: Directions inputs, Travel-Time estimate, Detailed Directions toggle -->
   <input id="origin" type="text" class="controls" placeholder="Origin" />
   <input id="destination" type="text" class="controls" placeholder="Destination" />
-  <div id="travel"> </div>
+  <div id="travel" style="font-size: 18px;">Travel-Time: - Minutes</div>
   <button id="details" type="button" class="btn btn-warning btn-sm" style="color: black; width: 260px;"
     onclick="showDirections()">
     Detailed Directions
   </button>
+
+
 
   <script src="{% static 'weather.js' %}"></script>
   <!--import axios-->

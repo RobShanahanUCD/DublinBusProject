@@ -126,3 +126,28 @@ html {
   text-align: center;
   font-size: 1.2em;
 }
+
+/* Timetable styling */
+tr td {
+  padding: 5px;
+}
+
+#buttonTT {
+  color: black;
+  background-color: "#fff";
+  border: "2px solid #fff";
+  border-radius: "2px";
+  box-shadow: "0 2px 6px rgba(0,0,0,.3)";
+  height: "25px";
+  width: "260px";
+  align-content: "space-around";
+}
+
+#Mon, #Sat, #Sun {
+  display: none;
+}
+
+#tableElement {
+  background-color: white;
+  border-radius: 0.15cm;
+}
