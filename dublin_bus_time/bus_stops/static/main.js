@@ -99,26 +99,6 @@ function centerUser(controlDiv, map) {
   });
 }
 
-// Travel-Time Infomation Box
-function travelTimeInfo(controlDiv, map, travelTimeVal) {
-  // Set CSS for the control border.
-  var controlUI = document.createElement("div");
-  controlUI.style.backgroundColor = "#fff";
-  controlUI.style.border = "2px solid #fff";
-  controlUI.style.borderRadius = "2px";
-  controlUI.style.boxShadow = "0 2px 6px rgba(0,0,0,.3)";
-  controlUI.style.height = "25px";
-  controlUI.style.width = "260px";
-  controlUI.style.marginTop = "10px";
-  controlUI.style.marginLeft = "10px";
-  controlUI.style.alignContent = "space-around";
-  controlUI.innerHTML =
-    "<h6 style='text-align: center;'><b>Travel-Time: " +
-    travelTimeVal +
-    " minutes</b></h6>";
-  controlDiv.appendChild(controlUI);
-}
-
 // Initialize and add the map
 function initMap() {
   // Centre the map at Dublin
@@ -157,6 +137,23 @@ function initMap() {
   );
 
   new AutocompleteDirectionsHandler(map);
+
+  var travelTime = document.getElementById("travel");
+  travelTime.style.backgroundColor = "#fff";
+  travelTime.style.border = "2px solid #fff";
+  travelTime.style.borderRadius = "2px";
+  travelTime.style.boxShadow = "0 2px 6px rgba(0,0,0,.3)";
+  travelTime.style.height = "25px";
+  travelTime.style.width = "260px";
+  travelTime.style.textAlign = "center";
+  travelTime.style.fontSize = "18px";
+  travelTime.style.marginTop = "10px";
+  travelTime.style.marginLeft = "10px";
+  travelTime.style.alignContent = "space-around";
+  map.controls[google.maps.ControlPosition.LEFT_TOP].push(travelTime);
+
+  var details = document.getElementById("details");
+  map.controls[google.maps.ControlPosition.LEFT_TOP].push(details);
 }
 
 /**
@@ -170,9 +167,6 @@ function AutocompleteDirectionsHandler(map) {
   this.directionsService = new google.maps.DirectionsService();
   this.directionsRenderer = new google.maps.DirectionsRenderer();
   this.directionsRenderer.setMap(map);
-  this.directionsRenderer.setPanel(
-    document.getElementById("detailedDirections")
-  );
 
   var originInput = document.getElementById("origin");
   originInput.style.backgroundColor = "#fff";
@@ -217,6 +211,8 @@ function AutocompleteDirectionsHandler(map) {
   );
 }
 
+//Function to check if there has been a change in the Directions input boxes.
+//From: https://developers.google.com/maps/documentation/javascript/places-autocomplete
 AutocompleteDirectionsHandler.prototype.setupPlaceChangedListener = function (
   autocomplete,
   mode
@@ -228,7 +224,7 @@ AutocompleteDirectionsHandler.prototype.setupPlaceChangedListener = function (
     var place = autocomplete.getPlace();
 
     if (!place.place_id) {
-      window.alert("Please select an option from the dropdown list.");
+      window.alert("Please enter a valid address.");
       return;
     }
     if (mode === "ORIG") {
@@ -240,6 +236,8 @@ AutocompleteDirectionsHandler.prototype.setupPlaceChangedListener = function (
   });
 };
 
+//Function to generate the route from the directions results
+//From: https://developers.google.com/maps/documentation/javascript/places-autocomplete
 AutocompleteDirectionsHandler.prototype.route = function () {
   if (!this.originID || !this.destinationID) {
     return;
@@ -261,7 +259,11 @@ AutocompleteDirectionsHandler.prototype.route = function () {
         var busData = [];
         var walkingData = [];
 
+        var dirInfo = response.routes[0].legs[0];
         var responseData = response.routes[0].legs[0].steps;
+        writeDirections(dirInfo, responseData);
+        console.log("Directions object:", response);
+        console.log("Response Data:", responseData);
         for (let i = 0; i < responseData.length; i++) {
           if (responseData[i]["travel_mode"] === "TRANSIT") {
             var busStep = {
@@ -298,10 +300,6 @@ AutocompleteDirectionsHandler.prototype.route = function () {
             walkingData.push(responseData[i]["duration"]["value"]);
           }
         }
-        console.log({ walking_data: walkingData, bus_data: busData });
-        console.log(
-          JSON.stringify({ walking_data: walkingData, bus_data: busData })
-        );
         axios
           .post("http://localhost:8000/predict/", {
             walking_data: walkingData,
@@ -324,22 +322,21 @@ AutocompleteDirectionsHandler.prototype.route = function () {
   );
 };
 
+//Function showing estimated travel time calculated by ML model
 function showTravelTime(data) {
-  // Create information box for travel time
-  travelTimeDiv = document.createElement("div");
-  var travelTime = travelTimeInfo(travelTimeDiv, map, data);
+  const estimate = document.querySelector("#travel");
+  estimate.innerHTML = ("Travel-Time: " + data + " Minutes");
 
-  travelTimeDiv.index = 1;
-  map.controls[google.maps.ControlPosition.LEFT_TOP].push(travelTimeDiv);
 
-  var details = document.getElementById("details");
-  map.controls[google.maps.ControlPosition.LEFT_TOP].push(details);
-
+  document.getElementById("travel").style.display = "block";
   document.getElementById("details").style.display = "block";
+
+  document.getElementById("directionsPanel").style.display = "none";
 }
 
+//Toggle button to show text directions
 function showDirections() {
-  var x = document.getElementById("detailedDirections");
+  var x = document.getElementById("directionsPanel");
   if (x.style.display === "block") {
     x.style.display = "none";
   } else {
@@ -347,3 +344,16 @@ function showDirections() {
   }
 }
 
+//Function to write the direction steps from the DirectionsRenderer result
+function writeDirections(dir, steps) {
+  var content = document.getElementById("detailedDirections");
+  content.innerHTML = "";
+  content.innerHTML += "<p><b>Total Distance: " + dir.distance.text + "</b></p>";
+  content.innerHTML += "<h6><b>" + dir.start_address + "</b></h6>";
+
+  for (var i = 0; i < steps.length; i++) {
+    content.innerHTML += "<p><b>" + (i + 1) + ". </b>" + steps[i].instructions + "</p><small>" + steps[i].distance.text + "</small>";
+  }
+
+  content.innerHTML += "<h6><b>" + dir.end_address + "</b></h6>";
+}
