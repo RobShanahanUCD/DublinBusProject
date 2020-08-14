@@ -26,7 +26,6 @@ yarn-error.log*
 .idea/
 #API key
 key.js
-.env
 
 #others
 dublin_bus_time/bus_stops/ml_models/pickle_builder.py
