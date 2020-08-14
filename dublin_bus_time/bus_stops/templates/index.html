@@ -31,6 +31,7 @@
 </head>
 
 <body>
+  <!-- App Navigation Bar -->
   <nav class="navbar fixed-top navbar-expand-md navbar-light bg-warning">
     <a class="navbar-brand" href="/">Dublin Bus</a>
     <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
@@ -45,18 +46,26 @@
     </div>
   </nav>
 
-  <div id="detailedDirections"></div>
+  <!-- Text Directions Panel -->
+  <div id="directionsPanel">
+    <h5 class="text-center p-3 border-bottom bg-warning">Directions</h5>
+    <div id="detailedDirections"></div>
+  </div>
 
+  <!-- Google Map -->
   <div id="map"></div>
 
   <div class="container-fluid">
     <div class="row">
+      <!-- Dublin Bus Twitter Feed Feature -->
       <div class="col-12 col-md-8" id="TwitterFeed">
         <h3 class="text-center p-3 border bg-warning">Twitter Feed</h3>
         <a class="twitter-timeline bg-warning" data-height="300" data-width="1200" data-theme="light"
           href="https://twitter.com/dublinbusnews?ref_src=twsrc%5Etfw">Tweets by dublinbusnews</a>
         <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
       </div>
+
+      <!-- Weather Feature -->
       <div class="col-12 col-md-4" id="Weather">
         <h3 class="text-center p-3 border bg-warning">Weather</h3>
 
@@ -76,8 +85,10 @@
     </div>
   </div>
 
+  <!-- Interactive elements: Directions inputs, Travel-Time estimate, Detailed Directions toggle -->
   <input id="origin" type="text" class="controls" placeholder="Origin" />
   <input id="destination" type="text" class="controls" placeholder="Destination" />
+  <div id="travel"></div>
   <button id="details" type="button" class="btn btn-warning btn-sm" style="color: black; width: 260px;"
     onclick="showDirections()">
     Detailed Directions
