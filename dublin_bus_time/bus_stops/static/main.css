@@ -44,6 +44,7 @@ html {
   height: "25px";
   width: "260px";
   align-content: "space-around";
+  position: "relative";
 }
 
 /* Text directions styling */

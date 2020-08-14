@@ -307,7 +307,7 @@ AutocompleteDirectionsHandler.prototype.route = function () {
           })
           .then((res) => {
             var journeyTime = JSON.stringify(
-              res.data.PredicedJourneyTime.PredicedJourneyTime
+              res.data.PredictedJourneyTime.PredictedJourneyTime
             );
             journeyTime = Math.round(journeyTime / 60);
             showTravelTime(journeyTime);

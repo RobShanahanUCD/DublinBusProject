@@ -14,8 +14,8 @@ from .models import LiveWeatherData
 from .models import Timetable
 from django.views.generic import TemplateView, DetailView, ListView
 
-
-sys.path.append(os.getcwd( ))
+# Get the correct path
+sys.path.append(os.getcwd())
 from .ml_models import train_model as ml
 
 
@@ -44,12 +44,11 @@ class Journey(APIView):
         Passes this information into our model to generate an estimation for the journey time."""
 
         data = request.data
-        print(data)
         # Get temp data from live weather database
         queryset = LiveWeatherData.objects.order_by('-datetime').values()[0]
         temp = queryset['temp']
-        predictions = {"PredicedJourneyTime": self.resolve_data(data, temp)}
-        return Response({"PredicedJourneyTime": predictions}, status=status.HTTP_200_OK)
+        predictions = {"PredictedJourneyTime": self.resolve_data(data, temp)}
+        return Response({"PredictedJourneyTime": predictions}, status=status.HTTP_200_OK)
 
     def resolve_data(self, data, temp):
 
