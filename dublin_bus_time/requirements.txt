@@ -10,3 +10,4 @@ Django==3.0.7
 django-cors-headers==3.4.0
 djangorestframework==3.11.0
 python-decouple==3.3
+whitenoise==5.2.0
