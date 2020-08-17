@@ -3,7 +3,7 @@ Repository for UCD MSc. Conversion Research Practicum Project
 - By Rob Shanahan, John Parks, Paihan Su
 
 # Deployed Application:
-- https://dublinbus-group11.herokuapp.com/
+- https://dublin-bus-group11.herokuapp.com/
 
 ## To run the code
 ### Step 1: Create and activate virtual environment using virtualenv
