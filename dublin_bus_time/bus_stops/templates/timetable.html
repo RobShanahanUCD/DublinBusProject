@@ -153,7 +153,7 @@
     var table_sat = '<tr>';
     var table_sun = '<tr>';
     for (var i = 0; i < all_data.length; i++) {
-      if (all_data[i][0] == routeID && all_data[i][1] == origin && (all_data[i][2] == 'Monday-Friday' || all_data[i][2] == 'Monday - Friday' || all_data[i][2] == 'Monday -Friday' || all_data[i][2] == 'Monday- Friday')) {
+      if (all_data[i][0] == routeID && all_data[i][1] == origin && (all_data[i][2] == 'Monday-Friday' || all_data[i][2] == 'Monday - Friday' || all_data[i][2] == 'Monday -Friday' || all_data[i][2] == 'Monday- Friday' || all_data[i][2] == 'Monday to Friday')) {
         if (count_mon % 4 == 0 && count_mon != 0) {
           table_mon += '</tr><tr><td>' + all_data[i][3] + '</td>';
         }
