@@ -14,8 +14,8 @@ RUN pip install pip -U
 
 # install dependency
 RUN pip install -r requirements.txt
-RUN mkdir bus_stops/staticfiles
-RUN python manage.py collectstatic --noinput
+# RUN mkdir bus_stops/staticfiles
+# RUN python manage.py collectstatic --noinput
 #start the django server and the PORT variable will be given by Heroku
 CMD python manage.py runserver 0.0.0.0:$PORT
 

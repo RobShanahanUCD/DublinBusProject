@@ -301,7 +301,7 @@ AutocompleteDirectionsHandler.prototype.route = function () {
           }
         }
         axios
-          .post("http://localhost:8000/predict/", {
+          .post("/predict/", {
             walking_data: walkingData,
             bus_data: busData,
           })
