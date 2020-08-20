@@ -154,10 +154,7 @@
     var table_sun = '<tr>';
     for (var i = 0; i < all_data.length; i++) {
       if (all_data[i][0] == routeID && all_data[i][1] == origin && (all_data[i][2] == 'Monday-Friday' || all_data[i][2] == 'Monday - Friday' || all_data[i][2] == 'Monday -Friday' || all_data[i][2] == 'Monday- Friday' || all_data[i][2] == 'Monday to Friday')) {
-        if (all_data[i][3].length > 7){
-          table_mon += '</tr><tr><td colspan="4">' + all_data[i][3] + '</td></tr><tr>'
-        }
-        else if (count_mon % 4 == 0 && count_mon != 0) {
+        if (count_mon % 4 == 0 && count_mon != 0) {
           table_mon += '</tr><tr><td>' + all_data[i][3] + '</td>';
         }
         else {
@@ -167,10 +164,7 @@
 
       }
       if (all_data[i][0] == routeID && all_data[i][1] == origin && all_data[i][2] == 'Saturday') {
-        if (all_data[i][3].length > 7){
-          table_sat += '</tr><tr><td colspan="4">' + all_data[i][3] + '</td></tr><tr>'
-        }
-        else if (count_sat % 4 == 0 && count_sat != 0) {
+        if (count_sat % 4 == 0 && count_sat != 0) {
           table_sat += '</tr><tr><td>' + all_data[i][3] + '</td>';
         }
         else {
@@ -180,10 +174,7 @@
 
       }
       if (all_data[i][0] == routeID && all_data[i][1] == origin && all_data[i][2] == 'Sunday') {
-        if (all_data[i][3].length > 7){
-          table_sun += '</tr><tr><td colspan="4">' + all_data[i][3] + '</td></tr><tr>'
-        }
-        else if (count_sun % 4 == 0 && count_sun != 0) {
+        if (count_sun % 4 == 0 && count_sun != 0) {
           table_sun += '</tr><tr><td>' + all_data[i][3] + '</td>';
         }
         else {
