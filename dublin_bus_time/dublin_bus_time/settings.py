@@ -21,10 +21,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY')
-
+SECRET_KEY = '!c!aw$e0b+#tbq#mid%!77qqrl1797y6ci+t(%r@*@lskn(hg'
+# from django.core.management.utils import get_random_secret_ key
+# SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', default=get_random_secret_key())
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -55,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'dublin_bus_time.urls'
@@ -128,8 +130,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
-
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
 #Addition Settings
 
 CORS_ORIGIN_ALLOW_ALL = True #or frontend cannot connect
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
