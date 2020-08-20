@@ -40,7 +40,7 @@
     <div class="navbar-nav ml-auto">
       <a href="/#TwitterFeed" class="nav-item nav-link">Twitter Feed</a>
       <a href="/#Weather" class="nav-item nav-link">Weather</a>
-      <a href="timetable" class="nav-item nav-link">Timetables</a>
+      <a href="timetable.html" class="nav-item nav-link">Timetables</a>
     </div>
   </div>
 </nav>
@@ -154,7 +154,10 @@
     var table_sun = '<tr>';
     for (var i = 0; i < all_data.length; i++) {
       if (all_data[i][0] == routeID && all_data[i][1] == origin && (all_data[i][2] == 'Monday-Friday' || all_data[i][2] == 'Monday - Friday' || all_data[i][2] == 'Monday -Friday' || all_data[i][2] == 'Monday- Friday' || all_data[i][2] == 'Monday to Friday')) {
-        if (count_mon % 4 == 0 && count_mon != 0) {
+        if (all_data[i][3].length > 7){
+          table_mon += '</tr><tr><td colspan="4">' + all_data[i][3] + '</td>'
+        }
+        else if (count_mon % 4 == 0 && count_mon != 0) {
           table_mon += '</tr><tr><td>' + all_data[i][3] + '</td>';
         }
         else {
@@ -164,7 +167,10 @@
 
       }
       if (all_data[i][0] == routeID && all_data[i][1] == origin && all_data[i][2] == 'Saturday') {
-        if (count_sat % 4 == 0 && count_sat != 0) {
+        if (all_data[i][3].length > 7){
+          table_sat += '</tr><tr><td colspan="4">' + all_data[i][3] + '</td>'
+        }
+        else if (count_sat % 4 == 0 && count_sat != 0) {
           table_sat += '</tr><tr><td>' + all_data[i][3] + '</td>';
         }
         else {
@@ -174,7 +180,10 @@
 
       }
       if (all_data[i][0] == routeID && all_data[i][1] == origin && all_data[i][2] == 'Sunday') {
-        if (count_sun % 4 == 0 && count_sun != 0) {
+        if (all_data[i][3].length > 7){
+          table_sun += '</tr><tr><td colspan="4">' + all_data[i][3] + '</td>'
+        }
+        else if (count_sun % 4 == 0 && count_sun != 0) {
           table_sun += '</tr><tr><td>' + all_data[i][3] + '</td>';
         }
         else {
