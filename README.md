@@ -1,10 +1,9 @@
 # DublinBusProject
 Repository for UCD MSc. Conversion Research Practicum Project
-- By Rob Shanahan, John Parks, Paihan Su
+- By Paihan Su, Rob Shanahan, John Parks, 
 
 # Deployed Application:
-- https://dublin-bus-group11.herokuapp.com/
-- https://dublinbus-group11.herokuapp.com/ (backup)
+- https://dublinbus-group11.herokuapp.com/ 
 
 
 
