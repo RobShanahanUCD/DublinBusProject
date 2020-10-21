@@ -3,7 +3,7 @@ Repository for UCD MSc. Conversion Research Practicum Project
 - By Paihan Su, Rob Shanahan, John Parks, 
 
 # Deployed Application:
-- https://dublinbus-group11.herokuapp.com/ (Sorry )
+- https://dublinbus-group11.herokuapp.com/ (Sorry the link is expired due to the RDS database exceed the credit)
 
 
 
